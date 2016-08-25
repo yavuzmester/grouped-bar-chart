@@ -1,10 +1,10 @@
 {
 	"name": "grouped-bar-chart-svg",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"description": "grouped bar chart powered with react and d3",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/yavuzmester/css-length-to-px"
+		"url": "https://github.com/yavuzmester/grouped-bar-chart-svg"
 	},
 	"dependencies": {
 		"react": "15.0.2",

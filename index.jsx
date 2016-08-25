@@ -25,6 +25,7 @@ const GroupedBarChartSvg = React.createClass({
             bottom: React.PropTypes.number.isRequired
         }).isRequired,
         svgWidth: React.PropTypes.number.isRequired,
+        divWidth: React.PropTypes.number.isRequired,
         data: React.PropTypes.arrayOf(
             React.PropTypes.shape({
                 category: React.PropTypes.string.isRequired,
@@ -47,11 +48,6 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     statics: {
-        divWidth: function() {
-            const {svgMargin, svgWidth} = this.props;
-            return svgMargin.left + svgWidth + svgMargin.right;
-        },
-
         barHeightScale: d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true)
     },
 
@@ -148,8 +144,7 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     render: function() {
-        const {svgMargin, title, data} = this.props,
-            divWidth = GroupedBarChartSvg.divWidth(),
+        const {svgMargin, divWidth, title, data} = this.props,
             divHeight = this.divHeight(),
             svgHeight = this.svgHeight(),
             xScale = this.xScale(),
