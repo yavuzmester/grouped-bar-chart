@@ -1,0 +1,28 @@
+{
+	"name": "grouped-bar-chart-svg",
+	"version": "0.0.0",
+	"description": "grouped bar chart powered with react and d3",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yavuzmester/css-length-to-px"
+	},
+	"dependencies": {
+		"react": "15.0.2",
+		"react-dom": "15.0.2",
+		"d3": "4.2.2",
+		"css-length-to-px": "1.0.4",
+		"classnames": "2.2.3",
+		"autoincrement": "1.0.0",
+		"underscore": "1.8.3"
+	},
+	"peerDependencies": {
+		"browserify": "^13.0.0",
+		"babelify": "^7.3.0",
+		"babel-preset-react": "^6.3.13"
+	},
+	"browserify": {
+		"transform": [["babelify", {"presets": ["react"]}]]
+	},
+	"author": "Yavuz Mester",
+	"license": "MIT"
+}
