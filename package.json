@@ -1,6 +1,6 @@
 {
 	"name": "grouped-bar-chart-svg",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"description": "grouped bar chart powered with react and d3",
 	"repository": {
 		"type": "git",

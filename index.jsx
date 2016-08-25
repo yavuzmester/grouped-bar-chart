@@ -17,9 +17,6 @@ const _ = require("underscore");
  */
 const GroupedBarChartSvg = React.createClass({
     propTypes: {
-        componentKeyObj: React.PropTypes.shape({
-            fieldName: React.PropTypes.string.isRequired
-        }).isRequired,
         title: React.PropTypes.string.isRequired,
         svgMargin: React.PropTypes.shape({
             left: React.PropTypes.number.isRequired,
@@ -89,8 +86,7 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     xDomain: function() {
-        const {logaxis} = this.props;
-        const {data} = this.props;
+        const {data, logaxis} = this.props;
         return [!logaxis ? 0 : 1, d3.max(data, d => d.value)];
     },
 
@@ -100,9 +96,9 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     xScale: function() {
-        const {logaxis} = this.props;
-        const xDomain = this.xDomain();
-        const xRange = this.xRange();
+        const {logaxis} = this.props,
+            xDomain = this.xDomain(),
+            xRange = this.xRange();
 
         if (!logaxis) {
             return d3.scaleLinear().domain(xDomain).range(xRange);
@@ -123,8 +119,9 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     y0Scale: function() {
-        const y0Domain = this.y0Domain();
-        const yRange = this.yRange();
+        const y0Domain = this.y0Domain(),
+            yRange = this.yRange();
+
         return d3.scaleBand().domain(y0Domain).rangeRound(yRange).padding(0.05);
     },
 
@@ -134,8 +131,9 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     y1Scale: function() {
-        const y1Domain = this.y1Domain();
-        const y0Scale = this.y0Scale();
+        const y1Domain = this.y1Domain(),
+            y0Scale = this.y0Scale();
+
         return d3.scaleBand().domain(y1Domain).rangeRound([0, y0Scale.bandwidth()]);
     },
 
@@ -204,9 +202,8 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     componentDidMountOrUpdate: function() {
-        const {data} = this.props;
-
-        const xAxis = this.xAxis(),
+        const {data} = this.props,
+            xAxis = this.xAxis(),
             yAxis = this.yAxis();
 
         const marginAxisNode = d3.select(ReactDOM.findDOMNode(this)).select("g.margin.axis"),
@@ -227,22 +224,15 @@ const GroupedBarChartSvg = React.createClass({
 
     onBarClicked: function(e /*: object */) {
         const {shiftKey /*: boolean */, category /*: string */} = e,
-            {componentKeyObj, selection} = this.props;
+            {selection} = this.props;
 
         const newSelection = shiftKey ? _.without(selection, category) : _.union(selection, [category]);
 
-        this.emit("bar-click", {
-            componentKeyObj: componentKeyObj,
-            newSelection: newSelection
-        });
+        this.emit("bar-click", {newSelection: newSelection});
     },
 
     onTitleClicked: function() {
-        const {componentKeyObj} = this.props;
-
-        this.emit("title-click", {
-            componentKeyObj: componentKeyObj
-        });
+        this.emit("title-click");
     }
 }); //end of GroupedBarChartSvg def
 
