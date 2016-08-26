@@ -1,27 +1,15 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "dependencies": {
-    "react": "^15.0.2",
-    "react-dom": "15.0.2",
-    "grouped-bar-chart-svg": "1.0.3"
-  },
-  "devDependencies": {
-    "browserify": "13.0.0",
-    "babelify": "7.3.0",
-    "babel-preset-react": "6.3.13",
-    "babel-preset-airbnb": "^2.0.0",
-    "babel-register": "^6.4.3",
-    "babel": "^6.3.26",
-    "jsdom": "^8.0.1",
-    "enzyme": "2.4.1",
-    "mocha": "3.0.2",
-    "react-addons-test-utils": "15.3.1",
-    "chai": "3.5.0",
-    "sinon": "^1.17.3"
-  },
-  "scripts": {
-    "browserify": "browserify app.jsx --extension=.jsx -t [babelify] -o build/bundle.js",
-    "test": "mocha ../test/.setup.js ../test/**/*-test.jsx"
-  }
+    "name": "test",
+    "version": "1.0.0",
+    "dependencies": {
+        "react": "^15.0.2",
+        "react-dom": "15.0.2",
+        "grouped-bar-chart-svg": "1.0.3",
+        "browserify": "13.0.0",
+        "babelify": "7.3.0",
+        "babel-preset-react": "6.3.13"
+    },
+    "scripts": {
+        "browserify": "browserify app.js --extension=.jsx -t [babelify] -o build/bundle.js"
+    }
 }

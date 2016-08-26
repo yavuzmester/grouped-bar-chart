@@ -23,6 +23,19 @@
 	"browserify": {
 		"transform": [["babelify", {"presets": ["react"]}]]
 	},
+	"globalDependencies": {
+		"mocha": "~3.0.1"
+	},
+	"devDependencies": {
+		"browserify": "13.0.0",
+		"babelify": "7.3.0",
+		"babel-preset-react": "6.3.13",
+		"react-addons-test-utils": "15.0.2",
+		"grouped-bar-chart-svg": "1.0.3"
+	},
+	"scripts": {
+		"test": "browserify test/test.js --extension=.jsx -t [babelify] -o test/build/test.js && mocha test/build/test.js"
+	},
 	"author": "Yavuz Mester",
 	"license": "MIT"
 }

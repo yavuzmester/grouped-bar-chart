@@ -1,8 +1,10 @@
+"use strict";
+
+const GroupedBarChartSvg = require("grouped-bar-chart-svg");
 const React = require("react");
 const ReactDOM = require("react-dom");
-const GroupedBarChartSvg = require("grouped-bar-chart-svg");
 
-GBCSProps = {
+const props = {
     "title": "bearercode",
     "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
     "svgWidth": 200,
@@ -26,6 +28,6 @@ GBCSProps = {
 };
 
 setTimeout(() => {
-    const gbc = ReactDOM.render(React.createElement(GroupedBarChartSvg, GBCSProps), document.getElementById("root"));
+    const gbc = ReactDOM.render(React.createElement(GroupedBarChartSvg, props), document.getElementById("root"));
     gbc.on("title-click", () => console.log("title-click"));
 }, 100);
