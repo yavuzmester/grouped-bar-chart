@@ -8,6 +8,6 @@
         "browserify": "13.0.0"
     },
     "scripts": {
-        "browserify": "rm -rf build && mkdir build && browserify app.js --extension=.jsx -o build/bundle.js"
+        "browserify": "rm -rf build && mkdir build && browserify app.js -o build/bundle.js"
     }
 }
