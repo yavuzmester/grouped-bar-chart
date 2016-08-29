@@ -17,11 +17,9 @@
 		"underscore": "1.8.3"
 	},
 	"devDependencies": {
-		"babel-plugin-transform-react-jsx": "6.8.0",
-		"react-addons-test-utils": "15.0.2"
-	},
-	"globalDependencies": {
 		"babel-cli": "6.14.0",
+		"babel-plugin-transform-react-jsx": "6.8.0",
+		"react-addons-test-utils": "15.0.2",
 		"mocha": "~3.0.1"
 	},
 	"scripts": {
