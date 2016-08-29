@@ -33,8 +33,8 @@ const GroupedBarChartSvg = React.createClass({
         }).isRequired).isRequired,
         categoriesSize: React.PropTypes.number,
         groups: React.PropTypes.arrayOf(React.PropTypes.shape({
-            groupId: React.PropTypes.string.isRequired,
-            groupColor: React.PropTypes.string.isRequired
+            id: React.PropTypes.string.isRequired,
+            color: React.PropTypes.string.isRequired
         }).isRequired).isRequired,
         percentage: React.PropTypes.bool,
         logaxis: React.PropTypes.bool,
@@ -82,7 +82,7 @@ const GroupedBarChartSvg = React.createClass({
 
     barColorIfSelected: function (datum /*: object */) {
         const { groups } = this.props;
-        return _.find(groups, g => g.groupId === datum.groupId).groupColor;
+        return _.find(groups, g => g.id === datum.groupId).color;
     },
 
     barColor: function (datum /*: object */) {

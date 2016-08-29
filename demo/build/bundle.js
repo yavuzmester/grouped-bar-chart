@@ -20,8 +20,8 @@ const props = {
     }],
     "categoriesSize": 2,
     "groups": [{
-        "groupId": "62",
-        "groupColor": "#E41A1C"
+        "id": "62",
+        "color": "#E41A1C"
     }],
     "logaxis": false,
     "selection": ["bulgur", "pirinç"]
@@ -534,9 +534,10 @@ const GroupedBarChartSvg = React.createClass({
         }).isRequired).isRequired,
         categoriesSize: React.PropTypes.number,
         groups: React.PropTypes.arrayOf(React.PropTypes.shape({
-            groupId: React.PropTypes.string.isRequired,
-            groupColor: React.PropTypes.string.isRequired
+            id: React.PropTypes.string.isRequired,
+            color: React.PropTypes.string.isRequired
         }).isRequired).isRequired,
+        percentage: React.PropTypes.bool,
         logaxis: React.PropTypes.bool,
         selection: React.PropTypes.arrayOf(React.PropTypes.string.isRequired).isRequired
     },
@@ -544,6 +545,7 @@ const GroupedBarChartSvg = React.createClass({
     getDefaultProps: function () {
         return {
             title: "",
+            percentage: false,
             logaxis: false
         };
     },
@@ -581,7 +583,7 @@ const GroupedBarChartSvg = React.createClass({
 
     barColorIfSelected: function (datum /*: object */) {
         const { groups } = this.props;
-        return _.find(groups, g => g.groupId === datum.groupId).groupColor;
+        return _.find(groups, g => g.id === datum.groupId).color;
     },
 
     barColor: function (datum /*: object */) {
@@ -617,8 +619,10 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     xAxis: function () {
-        const xScale = this.xScale();
-        return d3.axisBottom(xScale).ticks(3, ",.0s");
+        const { percentage } = this.props,
+              xScale = this.xScale();
+
+        return !percentage ? d3.axisBottom(xScale).ticks(3, ",.0s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
     },
 
     y0Domain: function () {
@@ -667,46 +671,50 @@ const GroupedBarChartSvg = React.createClass({
         return (
             /* Margin convention in D3: https://gist.github.com/mbostock/3019563 */
             React.createElement(
-                "svg",
-                { width: divWidth, height: divHeight },
+                "div",
+                { className: "category-chart" },
                 React.createElement(
-                    "g",
-                    { className: "margin axis", transform: "translate(" + svgMargin.left + "," + svgMargin.top + ")" },
-                    React.createElement("g", { className: "x axis", transform: "translate(0," + svgHeight + ")" }),
+                    "svg",
+                    { width: divWidth, height: divHeight },
                     React.createElement(
                         "g",
-                        { className: "y axis", transform: "translate(0,0)" },
-                        _.map(data, d => {
-                            return React.createElement(
-                                "rect",
-                                { key: autoIncrement,
-                                    className: "bar",
-                                    x: "0",
-                                    y: y0Scale(d.category) + y1Scale(this.barColorIfSelected(d)),
-                                    width: xScale(d.value),
-                                    height: y1Scale.bandwidth(),
-                                    style: { fill: this.barColor(d) },
-                                    onClick: e => this.onBarClicked(Object.assign({ category: d.category }, e)) },
-                                React.createElement(
-                                    "title",
-                                    null,
-                                    d.value
-                                )
-                            );
-                        })
-                    ),
-                    React.createElement(
-                        "text",
-                        { y: "-5", onClick: this.onTitleClicked },
+                        { className: "margin axis", transform: "translate(" + svgMargin.left + "," + svgMargin.top + ")" },
+                        React.createElement("g", { className: "x axis", transform: "translate(0," + svgHeight + ")" }),
                         React.createElement(
-                            "tspan",
-                            { className: "category-chart-title" },
-                            title
+                            "g",
+                            { className: "y axis", transform: "translate(0,0)" },
+                            _.map(data, d => {
+                                return React.createElement(
+                                    "rect",
+                                    { key: autoIncrement,
+                                        className: "bar",
+                                        x: "0",
+                                        y: y0Scale(d.category) + y1Scale(this.barColorIfSelected(d)),
+                                        width: xScale(d.value),
+                                        height: y1Scale.bandwidth(),
+                                        style: { fill: this.barColor(d) },
+                                        onClick: e => this.onBarClicked(Object.assign({ category: d.category }, e)) },
+                                    React.createElement(
+                                        "title",
+                                        null,
+                                        d.value
+                                    )
+                                );
+                            })
                         ),
                         React.createElement(
-                            "title",
-                            null,
-                            "Click title to toggle between alphabetical and numerical sorting."
+                            "text",
+                            { y: "-5", onClick: this.onTitleClicked },
+                            React.createElement(
+                                "tspan",
+                                { className: "category-chart-title" },
+                                title
+                            ),
+                            React.createElement(
+                                "title",
+                                null,
+                                "Click title to toggle between alphabetical and numerical sorting."
+                            )
                         )
                     )
                 )

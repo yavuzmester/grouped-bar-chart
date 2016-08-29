@@ -19,8 +19,8 @@ const props = {
     }],
     "categoriesSize": 2,
     "groups": [{
-        "groupId": "62",
-        "groupColor": "#E41A1C"
+        "id": "62",
+        "color": "#E41A1C"
     }],
     "logaxis": false,
     "selection": ["bulgur", "pirinç"]
