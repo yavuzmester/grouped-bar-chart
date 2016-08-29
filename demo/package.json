@@ -4,10 +4,10 @@
     "dependencies": {
         "react": "^15.0.2",
         "react-dom": "15.0.2",
-        "grouped-bar-chart-svg": "1.0.4",
+        "grouped-bar-chart-svg": "1.0.9",
         "browserify": "13.0.0"
     },
     "scripts": {
-        "browserify": "rm -rf build && mkdir build && browserify app.js -o build/bundle.js"
+        "rebuild": "rm -rf build && mkdir build && browserify app.js -o build/bundle.js"
     }
 }

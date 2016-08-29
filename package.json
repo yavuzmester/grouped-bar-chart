@@ -1,6 +1,6 @@
 {
 	"name": "grouped-bar-chart-svg",
-	"version": "1.0.4",
+	"version": "1.1.0",
 	"main": "build/index.js",
 	"description": "grouped bar chart powered with react and d3",
 	"repository": {
@@ -14,18 +14,18 @@
 		"css-length-to-px": "1.0.4",
 		"classnames": "2.2.3",
 		"autoincrement": "1.0.0",
-		"underscore": "1.8.3",
-		"babel-cli": "6.14.0",
-		"babel-plugin-transform-react-jsx": "6.8.0"
+		"underscore": "1.8.3"
 	},
 	"devDependencies": {
+		"babel-plugin-transform-react-jsx": "6.8.0",
 		"react-addons-test-utils": "15.0.2"
 	},
 	"globalDependencies": {
+		"babel-cli": "6.14.0",
 		"mocha": "~3.0.1"
 	},
 	"scripts": {
-		"install": "rm -rf build && mkdir build && babel --plugins transform-react-jsx index.jsx --out-file build/index.js",
+		"prepublish": "rm -rf build && mkdir build && babel --plugins transform-react-jsx index.jsx --out-file build/index.js",
 		"test": "npm install && mocha"
 	},
 	"author": "Yavuz Mester",
