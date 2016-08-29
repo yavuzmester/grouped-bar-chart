@@ -17,7 +17,7 @@ const _ = require("underscore");
  */
 const GroupedBarChartSvg = React.createClass({
     propTypes: {
-        title: React.PropTypes.string.isRequired,
+        title: React.PropTypes.string,
         svgMargin: React.PropTypes.shape({
             left: React.PropTypes.number.isRequired,
             right: React.PropTypes.number.isRequired,
@@ -25,27 +25,38 @@ const GroupedBarChartSvg = React.createClass({
             bottom: React.PropTypes.number.isRequired
         }).isRequired,
         svgWidth: React.PropTypes.number.isRequired,
-        divWidth: React.PropTypes.number.isRequired,
         data: React.PropTypes.arrayOf(React.PropTypes.shape({
             category: React.PropTypes.string.isRequired,
             categoryTitle: React.PropTypes.string,
             value: React.PropTypes.number.isRequired,
             groupId: React.PropTypes.string.isRequired
         }).isRequired).isRequired,
-        categoriesSize: React.PropTypes.number.isRequired,
+        categoriesSize: React.PropTypes.number,
         groups: React.PropTypes.arrayOf(React.PropTypes.shape({
             groupId: React.PropTypes.string.isRequired,
             groupColor: React.PropTypes.string.isRequired
         }).isRequired).isRequired,
-        logaxis: React.PropTypes.bool.isRequired,
+        logaxis: React.PropTypes.bool,
         selection: React.PropTypes.arrayOf(React.PropTypes.string.isRequired).isRequired
+    },
+
+    getDefaultProps: function () {
+        return {
+            title: "",
+            logaxis: false
+        };
     },
 
     statics: {
         barHeightScale: d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true)
     },
 
-    categorySize: function () {
+    divWidth: function () {
+        const { svgWidth, svgMargin } = this.props;
+        return svgWidth + svgMargin.left + svgMargin.right;
+    },
+
+    categoriesSize: function () {
         const { data } = this.props;
 
         return _.uniq(_.map(data, d => d.category)).length;
@@ -53,7 +64,7 @@ const GroupedBarChartSvg = React.createClass({
 
     svgHeight: function () {
         const { groups } = this.props,
-              categoriesSize = this.categorySize(),
+              categoriesSize = this.categoriesSize(),
               groupSize = groups.length,
               barHeight = toPx(GroupedBarChartSvg.barHeightScale(groupSize));
 
@@ -144,7 +155,8 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     render: function () {
-        const { svgMargin, divWidth, title, data } = this.props,
+        const { svgMargin, title, data } = this.props,
+              divWidth = this.divWidth(),
               divHeight = this.divHeight(),
               svgHeight = this.svgHeight(),
               xScale = this.xScale(),

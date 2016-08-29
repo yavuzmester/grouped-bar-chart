@@ -8,7 +8,6 @@ const props = {
     "title": "bearercode",
     "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
     "svgWidth": 200,
-    "divWidth": 360,
     "data": [{
         "category": "2G",
         "value": 1690,
