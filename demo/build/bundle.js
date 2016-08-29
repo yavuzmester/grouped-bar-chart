@@ -7,7 +7,7 @@ const ReactDOM = require("react-dom");
 
 const props = {
     "title": "bearercode",
-    "svgMargin": { "left": 110, "right": 50, "top": 20, "bottom": 30 },
+    "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
     "svgWidth": 200,
     "divWidth": 360,
     "data": [{
@@ -518,8 +518,6 @@ const _ = require("underscore");
  *   and it does not cause the callback to be called multiple times (that"s what we want there).
  */
 const GroupedBarChartSvg = React.createClass({
-    displayName: "GroupedBarChartSvg",
-
     propTypes: {
         title: React.PropTypes.string.isRequired,
         svgMargin: React.PropTypes.shape({

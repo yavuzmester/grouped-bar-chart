@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const GroupedBarChartSvg = require("grouped-bar-chart-svg");
+const GroupedBarChartSvg = require("..");
 const ReactTestUtils = require("react-addons-test-utils");
 const assert = require("assert");
 
