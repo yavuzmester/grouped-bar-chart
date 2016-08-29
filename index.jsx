@@ -40,6 +40,7 @@ const GroupedBarChartSvg = React.createClass({
                 groupColor: React.PropTypes.string.isRequired
             }).isRequired
         ).isRequired,
+        percentage: React.PropTypes.bool,
         logaxis: React.PropTypes.bool,
         selection: React.PropTypes.arrayOf(
             React.PropTypes.string.isRequired
@@ -49,6 +50,7 @@ const GroupedBarChartSvg = React.createClass({
     getDefaultProps: function() {
         return {
             title: "",
+            percentage: false,
             logaxis: false
         };
     },
@@ -123,8 +125,12 @@ const GroupedBarChartSvg = React.createClass({
     },
 
     xAxis: function() {
-        const xScale = this.xScale();
-        return d3.axisBottom(xScale).ticks(3, ",.0s");
+        const {percentage} = this.props,
+            xScale = this.xScale();
+
+        return !percentage ?
+            d3.axisBottom(xScale).ticks(3, ",.0s") :
+            d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
     },
 
     y0Domain: function() {
