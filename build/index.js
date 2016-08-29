@@ -45,8 +45,15 @@ const GroupedBarChartSvg = React.createClass({
         barHeightScale: d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true)
     },
 
+    categorySize: function () {
+        const { data } = this.props;
+
+        return _.uniq(_.map(data, d => d.category)).length;
+    },
+
     svgHeight: function () {
-        const { categoriesSize, groups } = this.props,
+        const { groups } = this.props,
+              categoriesSize = this.categorySize(),
               groupSize = groups.length,
               barHeight = toPx(GroupedBarChartSvg.barHeightScale(groupSize));
 
