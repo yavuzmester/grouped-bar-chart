@@ -6,15 +6,15 @@ const React = require("react");
 const ReactDOM = require("react-dom");
 
 const props = {
-    "title": "bearercode",
+    "title": "kilo",
     "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
     "svgWidth": 200,
     "data": [{
-        "category": "2G",
+        "category": "bulgur",
         "value": 1690,
         "groupId": "62"
     }, {
-        "category": "3G",
+        "category": "pirinç",
         "value": 2607,
         "groupId": "62"
     }],
@@ -24,7 +24,7 @@ const props = {
         "groupColor": "#E41A1C"
     }],
     "logaxis": false,
-    "selection": ["2G", "3G"]
+    "selection": ["bulgur", "pirinç"]
 };
 
 setTimeout(() => {
