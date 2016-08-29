@@ -170,46 +170,50 @@ const GroupedBarChartSvg = React.createClass({
         return (
             /* Margin convention in D3: https://gist.github.com/mbostock/3019563 */
             React.createElement(
-                "svg",
-                { width: divWidth, height: divHeight },
+                "div",
+                { className: "category-chart" },
                 React.createElement(
-                    "g",
-                    { className: "margin axis", transform: "translate(" + svgMargin.left + "," + svgMargin.top + ")" },
-                    React.createElement("g", { className: "x axis", transform: "translate(0," + svgHeight + ")" }),
+                    "svg",
+                    { width: divWidth, height: divHeight },
                     React.createElement(
                         "g",
-                        { className: "y axis", transform: "translate(0,0)" },
-                        _.map(data, d => {
-                            return React.createElement(
-                                "rect",
-                                { key: autoIncrement,
-                                    className: "bar",
-                                    x: "0",
-                                    y: y0Scale(d.category) + y1Scale(this.barColorIfSelected(d)),
-                                    width: xScale(d.value),
-                                    height: y1Scale.bandwidth(),
-                                    style: { fill: this.barColor(d) },
-                                    onClick: e => this.onBarClicked(Object.assign({ category: d.category }, e)) },
-                                React.createElement(
-                                    "title",
-                                    null,
-                                    d.value
-                                )
-                            );
-                        })
-                    ),
-                    React.createElement(
-                        "text",
-                        { y: "-5", onClick: this.onTitleClicked },
+                        { className: "margin axis", transform: "translate(" + svgMargin.left + "," + svgMargin.top + ")" },
+                        React.createElement("g", { className: "x axis", transform: "translate(0," + svgHeight + ")" }),
                         React.createElement(
-                            "tspan",
-                            { className: "category-chart-title" },
-                            title
+                            "g",
+                            { className: "y axis", transform: "translate(0,0)" },
+                            _.map(data, d => {
+                                return React.createElement(
+                                    "rect",
+                                    { key: autoIncrement,
+                                        className: "bar",
+                                        x: "0",
+                                        y: y0Scale(d.category) + y1Scale(this.barColorIfSelected(d)),
+                                        width: xScale(d.value),
+                                        height: y1Scale.bandwidth(),
+                                        style: { fill: this.barColor(d) },
+                                        onClick: e => this.onBarClicked(Object.assign({ category: d.category }, e)) },
+                                    React.createElement(
+                                        "title",
+                                        null,
+                                        d.value
+                                    )
+                                );
+                            })
                         ),
                         React.createElement(
-                            "title",
-                            null,
-                            "Click title to toggle between alphabetical and numerical sorting."
+                            "text",
+                            { y: "-5", onClick: this.onTitleClicked },
+                            React.createElement(
+                                "tspan",
+                                { className: "category-chart-title" },
+                                title
+                            ),
+                            React.createElement(
+                                "title",
+                                null,
+                                "Click title to toggle between alphabetical and numerical sorting."
+                            )
                         )
                     )
                 )
