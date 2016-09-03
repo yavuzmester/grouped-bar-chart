@@ -3,10 +3,47 @@
 const React = require("react");
 const ReactDOM = require("react-dom");
 const d3 = require("d3");
+const {EventEmitterMixin} = require("event-emitter-mixin");
 const autoIncrement = require("autoincrement");
-const toPx = require("css-length-to-px");
-const EventEmitter = require("events").EventEmitter;
+const toPx = require("@yavuzmester/css-length-to-px");
 const _ = require("underscore");
+
+const propTypes = {
+    title: React.PropTypes.string,
+    svgMargin: React.PropTypes.shape({
+        left: React.PropTypes.number.isRequired,
+        right: React.PropTypes.number.isRequired,
+        top: React.PropTypes.number.isRequired,
+        bottom: React.PropTypes.number.isRequired
+    }).isRequired,
+    svgWidth: React.PropTypes.number.isRequired,
+    data: React.PropTypes.arrayOf(
+        React.PropTypes.shape({
+            category: React.PropTypes.string.isRequired,
+            categoryTitle: React.PropTypes.string,
+            value: React.PropTypes.number.isRequired,
+            groupId: React.PropTypes.string.isRequired
+        }).isRequired
+    ).isRequired,
+    categoriesSize: React.PropTypes.number,
+    groups: React.PropTypes.arrayOf(
+        React.PropTypes.shape({
+            id: React.PropTypes.string.isRequired,
+            color: React.PropTypes.string.isRequired
+        }).isRequired
+    ).isRequired,
+    percentage: React.PropTypes.bool,
+    logaxis: React.PropTypes.bool,
+    selection: React.PropTypes.arrayOf(
+        React.PropTypes.string.isRequired
+    ).isRequired
+};
+
+const defaultProps = {
+    title: "",
+    percentage: false,
+    logaxis: false
+};
 
 /**
  * A note for selection.on usage in D3:
@@ -15,103 +52,66 @@ const _ = require("underscore");
  *   We are calling selection.on multiple times (at componentDidUpdate)
  *   and it does not cause the callback to be called multiple times (that"s what we want there).
  */
-const GroupedBarChartSvg = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string,
-        svgMargin: React.PropTypes.shape({
-            left: React.PropTypes.number.isRequired,
-            right: React.PropTypes.number.isRequired,
-            top: React.PropTypes.number.isRequired,
-            bottom: React.PropTypes.number.isRequired
-        }).isRequired,
-        svgWidth: React.PropTypes.number.isRequired,
-        data: React.PropTypes.arrayOf(
-            React.PropTypes.shape({
-                category: React.PropTypes.string.isRequired,
-                categoryTitle: React.PropTypes.string,
-                value: React.PropTypes.number.isRequired,
-                groupId: React.PropTypes.string.isRequired
-            }).isRequired
-        ).isRequired,
-        categoriesSize: React.PropTypes.number,
-        groups: React.PropTypes.arrayOf(
-            React.PropTypes.shape({
-                id: React.PropTypes.string.isRequired,
-                color: React.PropTypes.string.isRequired
-            }).isRequired
-        ).isRequired,
-        percentage: React.PropTypes.bool,
-        logaxis: React.PropTypes.bool,
-        selection: React.PropTypes.arrayOf(
-            React.PropTypes.string.isRequired
-        ).isRequired
-    },
+const Component = EventEmitterMixin(React.Component);
+class GroupedBarChartSvg extends Component {
+    constructor(props) {
+        super(props);
+        this.onBarClicked = this.onBarClicked.bind(this);
+        this.onTitleClicked = this.onTitleClicked.bind(this);
+    }
 
-    getDefaultProps: function() {
-        return {
-            title: "",
-            percentage: false,
-            logaxis: false
-        };
-    },
-
-    statics: {
-        barHeightScale: d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true)
-    },
-
-    divWidth: function() {
+    divWidth() {
         const {svgWidth, svgMargin} = this.props;
         return svgWidth + svgMargin.left + svgMargin.right;
-    },
+    }
 
-    categoriesSize: function() {
+    categoriesSize() {
         const {data} = this.props;
-
         return _.uniq(_.map(data,  d => d.category)).length;
-    },
+    }
 
-    svgHeight: function() {
+    svgHeight() {
         const {groups} = this.props,
             categoriesSize = this.categoriesSize(),
             groupSize = groups.length,
             barHeight = toPx(GroupedBarChartSvg.barHeightScale(groupSize));
 
         return categoriesSize * barHeight * groupSize;
-    },
+    }
 
-    divHeight: function() {
+    divHeight() {
         const {svgMargin} = this.props,
             svgHeight = this.svgHeight();
 
         return svgMargin.top + svgHeight + svgMargin.bottom;
-    },
+    }
 
-    barColorIfSelected: function(datum /*: object */) {
+    barColorIfSelected(datum /*: object */) {
         const {groups} = this.props;
         return _.find(groups, g => g.id === datum.groupId).color;
-    },
+    }
 
-    barColor: function(datum /*: object */) {
+    barColor(datum /*: object */) {
         const {selection} = this.props;
         return _.contains(selection, datum.category) ? this.barColorIfSelected(datum) : "gray";
-    },
+    }
 
-    categoryTitleColor: function(datum /*: object */) {
+    categoryTitleColor(datum /*: object */) {
         const {selection} = this.props;
         return _.contains(selection, datum.category) ? "white" : "gray";
-    },
+    }
 
-    xDomain: function() {
+    xDomain() {
         const {data, logaxis} = this.props;
         return [!logaxis ? 0 : 1, d3.max(data, d => d.value)];
-    },
+    }
 
-    xRange: function() {
+    xRange() {
         const {svgWidth} = this.props;
         return [0, svgWidth];
-    },
+    }
 
-    xScale: function() {
+    xScale() {
         const {logaxis} = this.props,
             xDomain = this.xDomain(),
             xRange = this.xRange();
@@ -122,52 +122,52 @@ const GroupedBarChartSvg = React.createClass({
         else {
             return d3.scaleLog().domain(xDomain).range(xRange);
         }
-    },
+    }
 
-    xAxis: function() {
+    xAxis() {
         const {percentage} = this.props,
             xScale = this.xScale();
 
         return !percentage ?
             d3.axisBottom(xScale).ticks(3, ",.0s") :
             d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
-    },
+    }
 
-    y0Domain: function() {
+    y0Domain() {
         const {data} = this.props;
         return _.map(data, d => d.category);
-    },
+    }
 
-    y0Scale: function() {
+    y0Scale() {
         const y0Domain = this.y0Domain(),
             yRange = this.yRange();
 
         return d3.scaleBand().domain(y0Domain).rangeRound(yRange).padding(0.05);
-    },
+    }
 
-    y1Domain: function() {
+    y1Domain() {
         const {data} = this.props;
         return _.uniq(_.map(data, d => this.barColorIfSelected(d)));
-    },
+    }
 
-    y1Scale: function() {
+    y1Scale() {
         const y1Domain = this.y1Domain(),
             y0Scale = this.y0Scale();
 
         return d3.scaleBand().domain(y1Domain).rangeRound([0, y0Scale.bandwidth()]);
-    },
+    }
 
-    yRange: function() {
+    yRange() {
         const svgHeight = this.svgHeight();
         return [0, svgHeight];
-    },
+    }
 
-    yAxis: function() {
+    yAxis() {
         const y0Scale = this.y0Scale();
         return d3.axisLeft(y0Scale);
-    },
+    }
 
-    render: function() {
+    render() {
         const {svgMargin, title, data} = this.props,
             divWidth = this.divWidth(),
             divHeight = this.divHeight(),
@@ -211,17 +211,17 @@ const GroupedBarChartSvg = React.createClass({
                 </svg>
             </div>
         );
-    },
+    }
 
-    componentDidMount: function() {
+    componentDidMount() {
         this.componentDidMountOrUpdate();
-    },
+    }
 
-    componentDidUpdate: function() {
+    componentDidUpdate() {
         this.componentDidMountOrUpdate();
-    },
+    }
 
-    componentDidMountOrUpdate: function() {
+    componentDidMountOrUpdate() {
         const {data} = this.props,
             xAxis = this.xAxis(),
             yAxis = this.yAxis();
@@ -240,25 +240,24 @@ const GroupedBarChartSvg = React.createClass({
         //adjust the y axis label colors (Caution: avoid nested selections in d3, as it expects the data to be nested as well)
         yAxisNode.selectAll(".tick text").data(data).
             style("fill", d => this.categoryTitleColor(d)).html(d => d.categoryTitle || d.category);
-    },
+    }
 
-    onBarClicked: function(e /*: object */) {
+    onBarClicked(e /*: object */) {
         const {shiftKey /*: boolean */, category /*: string */} = e,
             {selection} = this.props;
 
         const newSelection = shiftKey ? _.without(selection, category) : _.union(selection, [category]);
 
         this.emit("bar-click", {newSelection: newSelection});
-    },
+    }
 
-    onTitleClicked: function() {
+    onTitleClicked() {
         this.emit("title-click");
     }
-}); //end of GroupedBarChartSvg def
+} //end of GroupedBarChartSvg component def
 
-Object.assign(
-    GroupedBarChartSvg.prototype,
-    EventEmitter.prototype
-);
+GroupedBarChartSvg.propTypes = propTypes;
+GroupedBarChartSvg.defaultProps = defaultProps;
+GroupedBarChartSvg.barHeightScale = d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true);
 
 module.exports = GroupedBarChartSvg;
