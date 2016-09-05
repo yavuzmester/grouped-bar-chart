@@ -1,6 +1,6 @@
 "use strict";
 
-const GroupedBarChartSvg = require("@yavuzmester/grouped-bar-chart-svg");
+const GroupedBarChartSvg = require("grouped-bar-chart-svg");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
