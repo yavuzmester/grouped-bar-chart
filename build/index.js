@@ -62,7 +62,7 @@ class GroupedBarChart extends Component {
 
     categoriesSize() {
         const { data } = this.props;
-        return _.uniq(_.map(data, d => d.category)).length;
+        return _.uniq(data.map(d => d.category)).length;
     }
 
     svgHeight() {
@@ -83,17 +83,17 @@ class GroupedBarChart extends Component {
 
     barColorIfSelected(datum /*: object */) {
         const { groups } = this.props;
-        return _.find(groups, g => g.id === datum.groupId).color;
+        return groups.find(g => g.id === datum.groupId).color;
     }
 
     barColor(datum /*: object */) {
         const { selection } = this.props;
-        return _.contains(selection, datum.category) ? this.barColorIfSelected(datum) : "gray";
+        return selection.includes(datum.category) ? this.barColorIfSelected(datum) : "gray";
     }
 
     categoryTitleColor(datum /*: object */) {
         const { selection } = this.props;
-        return _.contains(selection, datum.category) ? "white" : "gray";
+        return selection.includes(datum.category) ? "white" : "gray";
     }
 
     xDomain() {
@@ -127,7 +127,7 @@ class GroupedBarChart extends Component {
 
     y0Domain() {
         const { data } = this.props;
-        return _.map(data, d => d.category);
+        return data.map(d => d.category);
     }
 
     y0Scale() {
@@ -139,7 +139,7 @@ class GroupedBarChart extends Component {
 
     y1Domain() {
         const { data } = this.props;
-        return _.uniq(_.map(data, d => this.barColorIfSelected(d)));
+        return _.uniq(data.map(d => this.barColorIfSelected(d)));
     }
 
     y1Scale() {
@@ -183,7 +183,7 @@ class GroupedBarChart extends Component {
                         React.createElement(
                             "g",
                             { className: "y axis", transform: "translate(0,0)" },
-                            _.map(data, d => {
+                            data.map(d => {
                                 return React.createElement(
                                     "rect",
                                     { key: autoIncrement,
@@ -254,7 +254,7 @@ class GroupedBarChart extends Component {
         const { shiftKey /*: boolean */, category /*: string */ } = e,
               { selection } = this.props;
 
-        const newSelection = shiftKey ? _.without(selection, category) : _.union(selection, [category]);
+        const newSelection = shiftKey ? _.without(selection, category) : selection.concat([category]);
 
         this.emit("bar-click", { newSelection: newSelection });
     }
