@@ -1,6 +1,6 @@
 "use strict";
 
-const GroupedBarChartSvg = require("@yavuzmester/grouped-bar-chart-svg");
+const GroupedBarChart = require("@yavuzmester/grouped-bar-chart");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
@@ -27,6 +27,6 @@ const props = {
 };
 
 setTimeout(() => {
-    const gbc = ReactDOM.render(React.createElement(GroupedBarChartSvg, props), document.getElementById("root"));
+    const gbc = ReactDOM.render(React.createElement(GroupedBarChart, props), document.getElementById("root"));
     gbc.on("title-click", () => console.log("title-click"));
 }, 100);

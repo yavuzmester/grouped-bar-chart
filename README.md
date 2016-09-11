@@ -1,1 +1,1 @@
-# grouped-bar-chart-svg
+# grouped-bar-chart

@@ -54,7 +54,7 @@ const defaultProps = {
  *   We are calling selection.on multiple times (at componentDidUpdate)
  *   and it does not cause the callback to be called multiple times (that"s what we want there).
  */
-class GroupedBarChartSvg extends Component {
+class GroupedBarChart extends Component {
     constructor(props) {
         super(props);
         this.onBarClicked = this.onBarClicked.bind(this);
@@ -75,7 +75,7 @@ class GroupedBarChartSvg extends Component {
         const {groups} = this.props,
             categoriesSize = this.categoriesSize(),
             groupSize = groups.length,
-            barHeight = toPx(GroupedBarChartSvg.barHeightScale(groupSize));
+            barHeight = toPx(GroupedBarChart.barHeightScale(groupSize));
 
         return categoriesSize * barHeight * groupSize;
     }
@@ -255,10 +255,10 @@ class GroupedBarChartSvg extends Component {
     onTitleClicked() {
         this.emit("title-click");
     }
-} //end of GroupedBarChartSvg component def
+} //end of GroupedBarChart component def
 
-GroupedBarChartSvg.propTypes = propTypes;
-GroupedBarChartSvg.defaultProps = defaultProps;
-GroupedBarChartSvg.barHeightScale = d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true);
+GroupedBarChart.propTypes = propTypes;
+GroupedBarChart.defaultProps = defaultProps;
+GroupedBarChart.barHeightScale = d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true);
 
-module.exports = GroupedBarChartSvg;
+module.exports = GroupedBarChart;
