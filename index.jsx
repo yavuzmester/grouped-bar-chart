@@ -1,41 +1,43 @@
 "use strict";
 
-const React = require("react");
+const {EventEmitterMixin} = require("event-emitter-mixin");
+const React = require("react"),
+    Component = EventEmitterMixin(React.Component),
+    PropTypes = React.PropTypes;
 const ReactDOM = require("react-dom");
 const d3 = require("d3");
-const {EventEmitterMixin} = require("event-emitter-mixin");
 const autoIncrement = require("autoincrement");
 const toPx = require("@yavuzmester/css-length-to-px");
 const _ = require("underscore");
 
 const propTypes = {
-    title: React.PropTypes.string,
-    svgMargin: React.PropTypes.shape({
-        left: React.PropTypes.number.isRequired,
-        right: React.PropTypes.number.isRequired,
-        top: React.PropTypes.number.isRequired,
-        bottom: React.PropTypes.number.isRequired
+    title: PropTypes.string,
+    svgMargin: PropTypes.shape({
+        left: PropTypes.number.isRequired,
+        right: PropTypes.number.isRequired,
+        top: PropTypes.number.isRequired,
+        bottom: PropTypes.number.isRequired
     }).isRequired,
-    svgWidth: React.PropTypes.number.isRequired,
-    data: React.PropTypes.arrayOf(
-        React.PropTypes.shape({
-            category: React.PropTypes.string.isRequired,
-            categoryTitle: React.PropTypes.string,
-            value: React.PropTypes.number.isRequired,
-            groupId: React.PropTypes.string.isRequired
+    svgWidth: PropTypes.number.isRequired,
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            category: PropTypes.string.isRequired,
+            categoryTitle: PropTypes.string,
+            value: PropTypes.number.isRequired,
+            groupId: PropTypes.string.isRequired
         }).isRequired
     ).isRequired,
-    categoriesSize: React.PropTypes.number,
-    groups: React.PropTypes.arrayOf(
-        React.PropTypes.shape({
-            id: React.PropTypes.string.isRequired,
-            color: React.PropTypes.string.isRequired
+    categoriesSize: PropTypes.number,
+    groups: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            color: PropTypes.string.isRequired
         }).isRequired
     ).isRequired,
-    percentage: React.PropTypes.bool,
-    logaxis: React.PropTypes.bool,
-    selection: React.PropTypes.arrayOf(
-        React.PropTypes.string.isRequired
+    percentage: PropTypes.bool,
+    logaxis: PropTypes.bool,
+    selection: PropTypes.arrayOf(
+        PropTypes.string.isRequired
     ).isRequired
 };
 
@@ -52,7 +54,6 @@ const defaultProps = {
  *   We are calling selection.on multiple times (at componentDidUpdate)
  *   and it does not cause the callback to be called multiple times (that"s what we want there).
  */
-const Component = EventEmitterMixin(React.Component);
 class GroupedBarChartSvg extends Component {
     constructor(props) {
         super(props);
@@ -235,7 +236,7 @@ class GroupedBarChartSvg extends Component {
         yAxisNode.call(yAxis);
 
         //make the y axis labels clickable
-        yAxisNode.selectAll(".tick").on("click", category => this.onBarClicked(Object.assign({category: d.category}, d3.event)));
+        yAxisNode.selectAll(".tick").on("click", category => this.onBarClicked(Object.assign({category: category}, d3.event)));
 
         //adjust the y axis label colors (Caution: avoid nested selections in d3, as it expects the data to be nested as well)
         yAxisNode.selectAll(".tick text").data(data).
