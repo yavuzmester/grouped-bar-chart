@@ -23,6 +23,7 @@ const propTypes = {
         category: PropTypes.string.isRequired,
         categoryTitle: PropTypes.string,
         value: PropTypes.number.isRequired,
+        percentageValue: PropTypes.number.isRequired,
         groupId: PropTypes.string.isRequired
     }).isRequired).isRequired,
     categoriesSize: PropTypes.number,
@@ -30,15 +31,15 @@ const propTypes = {
         id: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired
     }).isRequired).isRequired,
-    percentage: PropTypes.bool,
-    logaxis: PropTypes.bool,
+    showPercentageValue: PropTypes.bool,
+    logScale: PropTypes.bool,
     selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 };
 
 const defaultProps = {
     title: "",
-    percentage: false,
-    logaxis: false
+    showPercentageValue: false,
+    logScale: false
 };
 
 /**
@@ -53,6 +54,11 @@ class GroupedBarChart extends Component {
         super(props);
         this.onBarClicked = this.onBarClicked.bind(this);
         this.onTitleClicked = this.onTitleClicked.bind(this);
+    }
+
+    _valueOfDatum(d /*: object */) {
+        const { showPercentageValue } = this.props;
+        return showPercentageValue ? d.percentageValue : d.value;
     }
 
     divWidth() {
@@ -97,8 +103,8 @@ class GroupedBarChart extends Component {
     }
 
     xDomain() {
-        const { data, logaxis } = this.props;
-        return [!logaxis ? 0 : 1, d3.max(data, d => d.value)];
+        const { data, logScale } = this.props;
+        return [!logScale ? 0 : 1, d3.max(data, d => this._valueOfDatum(d))];
     }
 
     xRange() {
@@ -107,11 +113,11 @@ class GroupedBarChart extends Component {
     }
 
     xScale() {
-        const { logaxis } = this.props,
+        const { logScale } = this.props,
               xDomain = this.xDomain(),
               xRange = this.xRange();
 
-        if (!logaxis) {
+        if (!logScale) {
             return d3.scaleLinear().domain(xDomain).range(xRange);
         } else {
             return d3.scaleLog().domain(xDomain).range(xRange);
@@ -119,10 +125,10 @@ class GroupedBarChart extends Component {
     }
 
     xAxis() {
-        const { percentage } = this.props,
+        const { showPercentageValue } = this.props,
               xScale = this.xScale();
 
-        return !percentage ? d3.axisBottom(xScale).ticks(3, ",.0s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
+        return !showPercentageValue ? d3.axisBottom(xScale).ticks(3, ",.0s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
     }
 
     y0Domain() {
@@ -190,14 +196,14 @@ class GroupedBarChart extends Component {
                                         className: "bar",
                                         x: "0",
                                         y: y0Scale(d.category) + y1Scale(this.barColorIfSelected(d)),
-                                        width: xScale(d.value),
+                                        width: xScale(this._valueOfDatum(d)),
                                         height: y1Scale.bandwidth(),
                                         style: { fill: this.barColor(d) },
                                         onClick: e => this.onBarClicked(Object.assign({ category: d.category }, e)) },
                                     React.createElement(
                                         "title",
                                         null,
-                                        d.value
+                                        this._valueOfDatum(d)
                                     )
                                 );
                             })

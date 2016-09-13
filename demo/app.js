@@ -10,11 +10,13 @@ const props = {
     "svgWidth": 200,
     "data": [{
         "category": "bulgur",
-        "value": 1690,
+        "value": 3500,
+        "percentageValue": 35,
         "groupId": "62"
     }, {
         "category": "pirinç",
-        "value": 2607,
+        "value": 6500,
+        "percentageValue": 65,
         "groupId": "62"
     }],
     "categoriesSize": 2,
@@ -22,7 +24,8 @@ const props = {
         "id": "62",
         "color": "#E41A1C"
     }],
-    "logaxis": false,
+    "showPercentageValue": true,
+    "logScale": true,
     "selection": ["bulgur", "pirinç"]
 };
 
