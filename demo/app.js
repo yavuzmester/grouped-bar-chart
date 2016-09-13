@@ -24,8 +24,8 @@ const props = {
         "id": "62",
         "color": "#E41A1C"
     }],
-    "showPercentageValue": true,
-    "logScale": true,
+    "showPercentageValue": false,
+    "logScale": false,
     "selection": ["bulgur", "pirinç"]
 };
 

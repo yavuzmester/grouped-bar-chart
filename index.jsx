@@ -39,13 +39,15 @@ const propTypes = {
     logScale: PropTypes.bool,
     selection: PropTypes.arrayOf(
         PropTypes.string.isRequired
-    ).isRequired
+    ).isRequired,
+    verticalBars: PropTypes.bool
 };
 
 const defaultProps = {
     title: "",
     showPercentageValue: false,
-    logScale: false
+    logScale: false,
+    verticalBars: false
 };
 
 /**

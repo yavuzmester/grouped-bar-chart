@@ -25,8 +25,8 @@ const props = {
         "id": "62",
         "color": "#E41A1C"
     }],
-    "showPercentageValue": true,
-    "logScale": true,
+    "showPercentageValue": false,
+    "logScale": false,
     "selection": ["bulgur", "pirinç"]
 };
 
@@ -71,13 +71,15 @@ const propTypes = {
     }).isRequired).isRequired,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
-    selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    verticalBars: PropTypes.bool
 };
 
 const defaultProps = {
     title: "",
     showPercentageValue: false,
-    logScale: false
+    logScale: false,
+    verticalBars: false
 };
 
 /**
