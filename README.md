@@ -1,1 +1,1 @@
-# grouped-bar-chart
+# grouped-bar-chart-horizontal

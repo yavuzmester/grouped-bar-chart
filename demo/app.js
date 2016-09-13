@@ -1,6 +1,6 @@
 "use strict";
 
-const GroupedBarChart = require("@yavuzmester/grouped-bar-chart");
+const GroupedBarChartHorizontal = require("@yavuzmester/grouped-bar-chart-horizontal");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
@@ -9,12 +9,12 @@ const props = {
     "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
     "svgWidth": 200,
     "data": [{
-        "category": "bulgur",
+        "category": "hazelnut",
         "value": 3500,
         "percentageValue": 35,
         "groupId": "62"
     }, {
-        "category": "pirinç",
+        "category": "peanut",
         "value": 6500,
         "percentageValue": 65,
         "groupId": "62"
@@ -26,10 +26,10 @@ const props = {
     }],
     "showPercentageValue": false,
     "logScale": false,
-    "selection": ["bulgur", "pirinç"]
+    "selection": ["hazelnut", "peanut"]
 };
 
 setTimeout(() => {
-    const gbc = ReactDOM.render(React.createElement(GroupedBarChart, props), document.getElementById("root"));
+    const gbc = ReactDOM.render(React.createElement(GroupedBarChartHorizontal, props), document.getElementById("root"));
     gbc.on("title-click", () => console.log("title-click"));
 }, 100);

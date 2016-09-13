@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-const GroupedBarChart = require("@yavuzmester/grouped-bar-chart");
+const GroupedBarChartHorizontal = require("@yavuzmester/grouped-bar-chart-horizontal");
 const React = require("react");
 const ReactDOM = require("react-dom");
 
@@ -10,12 +10,12 @@ const props = {
     "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
     "svgWidth": 200,
     "data": [{
-        "category": "bulgur",
+        "category": "hazelnut",
         "value": 3500,
         "percentageValue": 35,
         "groupId": "62"
     }, {
-        "category": "pirinç",
+        "category": "peanut",
         "value": 6500,
         "percentageValue": 65,
         "groupId": "62"
@@ -27,15 +27,15 @@ const props = {
     }],
     "showPercentageValue": false,
     "logScale": false,
-    "selection": ["bulgur", "pirinç"]
+    "selection": ["hazelnut", "peanut"]
 };
 
 setTimeout(() => {
-    const gbc = ReactDOM.render(React.createElement(GroupedBarChart, props), document.getElementById("root"));
+    const gbc = ReactDOM.render(React.createElement(GroupedBarChartHorizontal, props), document.getElementById("root"));
     gbc.on("title-click", () => console.log("title-click"));
 }, 100);
 
-},{"@yavuzmester/grouped-bar-chart":2,"react":178,"react-dom":9}],2:[function(require,module,exports){
+},{"@yavuzmester/grouped-bar-chart-horizontal":2,"react":178,"react-dom":9}],2:[function(require,module,exports){
 "use strict";
 
 const { EventEmitterMixin } = require("event-emitter-mixin");
@@ -89,7 +89,7 @@ const defaultProps = {
  *   We are calling selection.on multiple times (at componentDidUpdate)
  *   and it does not cause the callback to be called multiple times (that"s what we want there).
  */
-class GroupedBarChart extends Component {
+class GroupedBarChartHorizontal extends Component {
     constructor(props) {
         super(props);
         this.onBarClicked = this.onBarClicked.bind(this);
@@ -115,7 +115,7 @@ class GroupedBarChart extends Component {
         const { groups } = this.props,
               categoriesSize = this.categoriesSize(),
               groupSize = groups.length,
-              barHeight = toPx(GroupedBarChart.barHeightScale(groupSize));
+              barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(groupSize));
 
         return categoriesSize * barHeight * groupSize;
     }
@@ -308,13 +308,13 @@ class GroupedBarChart extends Component {
     onTitleClicked() {
         this.emit("title-click");
     }
-} //end of GroupedBarChart component def
+} //end of GroupedBarChartHorizontal component def
 
-GroupedBarChart.propTypes = propTypes;
-GroupedBarChart.defaultProps = defaultProps;
-GroupedBarChart.barHeightScale = d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true);
+GroupedBarChartHorizontal.propTypes = propTypes;
+GroupedBarChartHorizontal.defaultProps = defaultProps;
+GroupedBarChartHorizontal.barHeightScale = d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true);
 
-module.exports = GroupedBarChart;
+module.exports = GroupedBarChartHorizontal;
 
 },{"@yavuzmester/css-length-to-px":3,"autoincrement":4,"d3":5,"event-emitter-mixin":6,"react":178,"react-dom":9,"underscore":7}],3:[function(require,module,exports){
 "use strict";
