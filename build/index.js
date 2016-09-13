@@ -12,13 +12,13 @@ const _ = require("underscore");
 
 const propTypes = {
     title: PropTypes.string,
+    divWidth: PropTypes.number.isRequired,
     svgMargin: PropTypes.shape({
         left: PropTypes.number.isRequired,
         right: PropTypes.number.isRequired,
         top: PropTypes.number.isRequired,
         bottom: PropTypes.number.isRequired
     }).isRequired,
-    svgWidth: PropTypes.number.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
         categoryTitle: PropTypes.string,
@@ -26,7 +26,7 @@ const propTypes = {
         percentageValue: PropTypes.number.isRequired,
         groupId: PropTypes.string.isRequired
     }).isRequired).isRequired,
-    categoriesSize: PropTypes.number,
+    categoriesSize: PropTypes.number, //may be provided for performance (avoids looping over data)
     groups: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired
@@ -63,14 +63,14 @@ class GroupedBarChartHorizontal extends Component {
         return showPercentageValue ? d.percentageValue : d.value;
     }
 
-    divWidth() {
-        const { svgWidth, svgMargin } = this.props;
-        return svgWidth + svgMargin.left + svgMargin.right;
+    svgWidth() {
+        const { divWidth, svgMargin } = this.props;
+        return divWidth - svgMargin.left - svgMargin.right;
     }
 
     categoriesSize() {
-        const { data } = this.props;
-        return _.uniq(data.map(d => d.category)).length;
+        const { categoriesSize, data } = this.props;
+        return categoriesSize || _.uniq(data.map(d => d.category)).length;
     }
 
     svgHeight() {
@@ -110,7 +110,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     xRange() {
-        const { svgWidth } = this.props;
+        const svgWidth = this.svgWidth();
         return [0, svgWidth];
     }
 
@@ -168,8 +168,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     render() {
-        const { svgMargin, title, data } = this.props,
-              divWidth = this.divWidth(),
+        const { divWidth, svgMargin, title, data } = this.props,
               divHeight = this.divHeight(),
               svgHeight = this.svgHeight(),
               xScale = this.xScale(),
@@ -205,7 +204,7 @@ class GroupedBarChartHorizontal extends Component {
                                     React.createElement(
                                         "title",
                                         null,
-                                        this._valueOfDatum(d)
+                                        d.value + "\n%" + d.percentageValue
                                     )
                                 );
                             })

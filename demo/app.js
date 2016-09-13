@@ -6,8 +6,13 @@ const ReactDOM = require("react-dom");
 
 const props = {
     "title": "kilo",
-    "svgMargin": {"left":110,"right":50,"top":20,"bottom":30},
-    "svgWidth": 200,
+    "divWidth": 360,
+    "svgMargin": {
+        "left": 110,
+        "right": 50,
+        "top": 20,
+        "bottom": 30
+    },
     "data": [{
         "category": "hazelnut",
         "value": 3500,
@@ -20,10 +25,12 @@ const props = {
         "groupId": "62"
     }],
     "categoriesSize": 2,
-    "groups": [{
-        "id": "62",
-        "color": "#E41A1C"
-    }],
+    "groups": [
+        {
+            "id": "62",
+            "color": "#E41A1C"
+        }
+    ],
     "showPercentageValue": false,
     "logScale": false,
     "selection": ["hazelnut", "peanut"]
