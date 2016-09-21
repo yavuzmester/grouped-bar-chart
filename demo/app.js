@@ -15,23 +15,34 @@ const props = {
     },
     "data": [{
         "category": "hazelnut",
-        "value": 3500,
-        "percentageValue": 35,
+        "value": 1000,
         "groupId": "62"
     }, {
         "category": "peanut",
-        "value": 6500,
-        "percentageValue": 65,
+        "value": 1000,
         "groupId": "62"
+    },{
+        "category": "hazelnut",
+        "value": 1000,
+        "groupId": "63"
+    }, {
+        "category": "peanut",
+        "value": 2000,
+        "groupId": "63"
     }],
-    "categoriesSize": 2,
     "groups": [
         {
             "id": "62",
-            "color": "#E41A1C"
+            "color": "red"
+        },
+        {
+            "id": "63",
+            "color": "green"
         }
     ],
-    "showPercentageValue": false,
+    "groupIdsToSum": ["62", "63"],
+    "groupSumColor": "yellow",
+    "showPercentageValue": true,
     "logScale": false,
     "selection": ["hazelnut", "peanut"]
 };
