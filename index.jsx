@@ -23,11 +23,14 @@ const propTypes = {
     data: PropTypes.arrayOf(
         PropTypes.shape({
             category: PropTypes.string.isRequired,
-            categoryTitle: PropTypes.string,
             value: PropTypes.number.isRequired,
             groupId: PropTypes.string.isRequired
         }).isRequired
     ).isRequired,
+    categoryTitles: PropTypes.shape({
+        category: PropTypes.string,
+        categoryTitle: PropTypes.string
+    }),
     groups: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
@@ -40,6 +43,7 @@ const propTypes = {
     groupSumColor: PropTypes.string,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
+    alphaOrder: PropTypes.bool,
     selection: PropTypes.arrayOf(
         PropTypes.string.isRequired
     ).isRequired
@@ -47,9 +51,11 @@ const propTypes = {
 
 const defaultProps = {
     title: "",
+    categoryTitles: {},
     groupIdsToSum: [],
     showPercentageValue: false,
-    logScale: false
+    logScale: false,
+    alphaOrder: false
 };
 
 /**
@@ -105,7 +111,6 @@ class GroupedBarChartHorizontal extends Component {
             return _.map(groupedData, (groupData, category) => {
                 return {
                     category: category,
-                    categoryTitle: groupData[0].categoryTitle,
                     value: groupData.filter(d => groupIdsToSum.indexOf(d.groupId) >= 0).
                         reduce((memo, gd) => memo + gd.value, 0),
                     groupId: "group-sum"
@@ -115,31 +120,40 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     data() /*: array<object> */ {
-        const {data, groupIdsToSum, showPercentageValue} = this.props;
+        const {data, groupIdsToSum, showPercentageValue, alphaOrder} = this.props;
 
         const groupSumData = this.groupSumData(groupIdsToSum);
 
         if (!showPercentageValue) {
-            return data.concat(groupSumData);
+            return this._sortData(
+                data.concat(groupSumData),
+                alphaOrder
+            );
         }
         else {
             const groupTotals = this.groupTotals();
 
-            return data.map(d => {
-                const total = groupTotals[d.groupId];
+            return this._sortData(
+                data.map(d => {
+                    const total = groupTotals[d.groupId];
 
-                return Object.assign(
-                    {percentageValue: calculatePercentage(d.value, total)},
-                    d
-                );
-            }).concat(
-                groupSumData.map(d => {
-                    return Object.assign(
-                        {percentageValue: 100},
-                        d
-                    );
-                })
+                    return Object.assign({percentageValue: calculatePercentage(d.value, total)}, d);
+                }).concat(
+                    groupSumData.map(d => {
+                        return Object.assign({percentageValue: 100}, d);
+                    })
+                ),
+                alphaOrder
             );
+        }
+    }
+
+    _sortData(data /*: array<object> */, alphaOrder /*: boolean> */) /*: array<object> */ {
+        if (alphaOrder) {
+            return _.sortBy(data, d => this.categoryTitle(d.category));
+        }
+        else {
+            return _.sortBy(data, d => -1 * (d.groupId === "group-sum" ? -Infinity : d.value));
         }
     }
 
@@ -148,9 +162,13 @@ class GroupedBarChartHorizontal extends Component {
         return divWidth - svgMargin.left - svgMargin.right;
     }
 
-    categoriesSize() /*: number */ {
+    categories() /*: array<string> */ {
         const data = this.data();
-        return _.uniq(data.map(d => d.category)).length;
+        return _.uniq(data.map(d => d.category));
+    }
+
+    categoriesSize() /*: number */ {
+        return this.categories().length;
     }
 
     svgHeight() /*: number */ {
@@ -179,9 +197,14 @@ class GroupedBarChartHorizontal extends Component {
         return selection.includes(datum.category) ? this.barColorIfSelected(datum) : "gray";
     }
 
-    categoryTitleColor(datum /*: object */) /*: string */ {
+    categoryTitle(category /*: string */) /*: string */ {
+        const {categoryTitles} = this.props;
+        return categoryTitles[category] || category;
+    }
+
+    categoryTitleColor(category /*: string */) /*: string */ {
         const {selection} = this.props;
-        return selection.includes(datum.category) ? "white" : "gray";
+        return selection.includes(category) ? "white" : "gray";
     }
 
     xDomain() /*: array<number> */ {
@@ -323,8 +346,8 @@ class GroupedBarChartHorizontal extends Component {
         yAxisNode.selectAll(".tick").on("click", category => this.onBarClicked(Object.assign({category: category}, d3.event)));
 
         //adjust the y axis label colors (Caution: avoid nested selections in d3, as it expects the data to be nested as well)
-        yAxisNode.selectAll(".tick text").data(data).
-            style("fill", d => this.categoryTitleColor(d)).html(d => d.categoryTitle || d.category);
+        yAxisNode.selectAll(".tick text").data(this.categories()).
+            style("fill", category => this.categoryTitleColor(category)).html(category => this.categoryTitle(category) );
     }
 
     onBarClicked(e /*: object */) {
@@ -343,6 +366,7 @@ class GroupedBarChartHorizontal extends Component {
 
 GroupedBarChartHorizontal.propTypes = propTypes;
 GroupedBarChartHorizontal.defaultProps = defaultProps;
+
 GroupedBarChartHorizontal.barHeightScale = d3.scaleLinear().domain([1, 11]).range(["2.5ch", "0.5ch"]).clamp(true);
 
 module.exports = GroupedBarChartHorizontal;

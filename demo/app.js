@@ -44,6 +44,7 @@ const props = {
     "groupSumColor": "yellow",
     "showPercentageValue": true,
     "logScale": false,
+    "alphaOrder": true,
     "selection": ["hazelnut", "peanut"]
 };
 
