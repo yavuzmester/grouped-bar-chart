@@ -1,16 +1,18 @@
 {
 	"name": "@yavuzmester/grouped-bar-chart-horizontal",
-	"version": "2.0.2",
+	"version": "2.0.3",
 	"main": "build/index.js",
 	"description": "grouped bar chart powered with react and d3",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/yavuzmester/grouped-bar-chart-horizontal"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"react": "^15.0.2",
 		"react-dom": "^15.0.2",
-		"d3": "^4.2.2",
+		"d3": "^4.2.2"
+	},
+	"dependencies": {
 		"event-emitter-mixin": "^0.3.5",
 		"@yavuzmester/css-length-to-px": "^1.0.4",
 		"classnames": "^2.2.3",

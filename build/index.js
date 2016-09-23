@@ -103,14 +103,6 @@ class GroupedBarChartHorizontal extends Component {
         }
     }
 
-    _sortData(data /*: array<object> */, alphaOrder /*: boolean> */) /*: array<object> */{
-        if (alphaOrder) {
-            return _.sortBy(data, d => this.categoryTitle(d.category));
-        } else {
-            return _.sortBy(data, d => -1 * (d.groupId === "group-sum" ? -Infinity : d.value));
-        }
-    }
-
     data() /*: array<object> */{
         const { data, groupIdsToSum, showPercentageValue, alphaOrder } = this.props;
 
@@ -128,6 +120,14 @@ class GroupedBarChartHorizontal extends Component {
             }).concat(groupSumData.map(d => {
                 return Object.assign({ percentageValue: 100 }, d);
             })), alphaOrder);
+        }
+    }
+
+    _sortData(data /*: array<object> */, alphaOrder /*: boolean> */) /*: array<object> */{
+        if (alphaOrder) {
+            return _.sortBy(data, d => this.categoryTitle(d.category));
+        } else {
+            return _.sortBy(data, d => -1 * (d.groupId === "group-sum" ? -Infinity : d.value));
         }
     }
 
