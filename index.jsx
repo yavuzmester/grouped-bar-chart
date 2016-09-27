@@ -27,10 +27,12 @@ const propTypes = {
             groupId: PropTypes.string.isRequired
         }).isRequired
     ).isRequired,
-    categoryTitles: PropTypes.shape({
-        category: PropTypes.string,
-        categoryTitle: PropTypes.string
-    }),
+    categoryTitles: PropTypes.arrayOf(
+        PropTypes.shape({
+            category: PropTypes.string.isRequired,
+            categoryTitle: PropTypes.string.isRequired
+        })
+    ),
     groups: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
@@ -51,7 +53,7 @@ const propTypes = {
 
 const defaultProps = {
     title: "",
-    categoryTitles: {},
+    categoryTitles: [],
     groupIdsToSum: [],
     showPercentageValue: false,
     logScale: false,
@@ -198,8 +200,10 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     categoryTitle(category /*: string */) /*: string */ {
-        const {categoryTitles} = this.props;
-        return categoryTitles[category] || category;
+        const {categoryTitles} = this.props,
+            categoryTitleObj = categoryTitles && categoryTitles.find(ct => ct.category === category);
+
+        return categoryTitleObj ? categoryTitleObj.categoryTitle : category;
     }
 
     categoryTitleColor(category /*: string */) /*: string */ {

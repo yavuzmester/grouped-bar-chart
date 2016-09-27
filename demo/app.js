@@ -30,6 +30,16 @@ const props = {
         "value": 2000,
         "groupId": "63"
     }],
+    "categoryTitles": [
+        {
+            category: "hazelnut",
+            categoryTitle: "adana"
+        },
+        {
+            category: "peanut",
+            categoryTitle: "ankara"
+        }
+    ],
     "groups": [
         {
             "id": "62",
