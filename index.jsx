@@ -39,9 +39,6 @@ const propTypes = {
             color: PropTypes.string.isRequired
         }).isRequired
     ).isRequired,
-    groupIdsToSum: PropTypes.arrayOf(
-        PropTypes.string.isRequired
-    ),
     groupSumColor: PropTypes.string,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
@@ -54,7 +51,6 @@ const propTypes = {
 const defaultProps = {
     title: "",
     categoryTitles: [],
-    groupIdsToSum: [],
     showPercentageValue: false,
     logScale: false,
     alphaOrder: false
@@ -101,61 +97,19 @@ class GroupedBarChartHorizontal extends Component {
         }, {});
     }
 
-    groupSumData(groupIdsToSum /*: array<string> */) /*: array<object> */ {
-        if (groupIdsToSum.length == 0) {
-            return [];
-        }
-        else {
-            const {data} = this.props;
-
-            const groupedData /*: object */ = _.groupBy(data, d => d.category);
-
-            return _.map(groupedData, (groupData, category) => {
-                return {
-                    category: category,
-                    value: groupData.filter(d => groupIdsToSum.indexOf(d.groupId) >= 0).
-                        reduce((memo, gd) => memo + gd.value, 0),
-                    groupId: "group-sum"
-                };
-            });
-        }
-    }
-
     data() /*: array<object> */ {
-        const {data, groupIdsToSum, showPercentageValue, alphaOrder} = this.props;
-
-        const groupSumData = this.groupSumData(groupIdsToSum);
+        const {data, showPercentageValue, alphaOrder} = this.props;
 
         if (!showPercentageValue) {
-            return this._sortData(
-                data.concat(groupSumData),
-                alphaOrder
-            );
+            return data;
         }
         else {
             const groupTotals = this.groupTotals();
 
-            return this._sortData(
-                data.map(d => {
-                    const total = groupTotals[d.groupId];
-
-                    return Object.assign({percentageValue: calculatePercentage(d.value, total)}, d);
-                }).concat(
-                    groupSumData.map(d => {
-                        return Object.assign({percentageValue: 100}, d);
-                    })
-                ),
-                alphaOrder
-            );
-        }
-    }
-
-    _sortData(data /*: array<object> */, alphaOrder /*: boolean> */) /*: array<object> */ {
-        if (alphaOrder) {
-            return _.sortBy(data, d => this.categoryTitle(d.category));
-        }
-        else {
-            return _.sortBy(data, d => -1 * (d.groupId === "group-sum" ? -Infinity : d.value));
+            return data.map(d => {
+                const total = groupTotals[d.groupId];
+                return Object.assign({percentageValue: calculatePercentage(d.value, total)}, d);
+            });
         }
     }
 
