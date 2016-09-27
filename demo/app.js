@@ -50,7 +50,6 @@ const props = {
             "color": "green"
         }
     ],
-    "groupSumColor": "yellow",
     "showPercentageValue": true,
     "logScale": false,
     "selection": ["hazelnut", "peanut"]

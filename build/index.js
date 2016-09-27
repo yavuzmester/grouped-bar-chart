@@ -33,10 +33,8 @@ const propTypes = {
         id: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired
     }).isRequired).isRequired,
-    groupSumColor: PropTypes.string,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
-    alphaOrder: PropTypes.bool,
     selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 };
 
@@ -44,8 +42,7 @@ const defaultProps = {
     title: "",
     categoryTitles: [],
     showPercentageValue: false,
-    logScale: false,
-    alphaOrder: false
+    logScale: false
 };
 
 /**
@@ -62,15 +59,6 @@ class GroupedBarChartHorizontal extends Component {
         this.onTitleClicked = this.onTitleClicked.bind(this);
     }
 
-    groups() /*: array<object> */{
-        const { groups, groupSumColor } = this.props;
-
-        return groups.concat(groupSumColor ? [{
-            id: "group-sum",
-            color: groupSumColor
-        }] : []);
-    }
-
     groupTotals() /*: object */{
         const { data } = this.props;
 
@@ -84,7 +72,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     data() /*: array<object> */{
-        const { data, showPercentageValue, alphaOrder } = this.props;
+        const { data, showPercentageValue } = this.props;
 
         if (!showPercentageValue) {
             return data;
@@ -113,7 +101,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     svgHeight() /*: number */{
-        const groups = this.groups(),
+        const { groups } = this.props,
               categoriesSize = this.categoriesSize(),
               groupSize = groups.length,
               barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(groupSize));
@@ -129,7 +117,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     barColorIfSelected(datum /*: object */) /*: string */{
-        const groups = this.groups();
+        const { groups } = this.props;
         return groups.find(g => g.id === datum.groupId).color;
     }
 
