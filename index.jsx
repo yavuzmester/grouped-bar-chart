@@ -42,7 +42,6 @@ const propTypes = {
     groupSumColor: PropTypes.string,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
-    alphaOrder: PropTypes.bool,
     selection: PropTypes.arrayOf(
         PropTypes.string.isRequired
     ).isRequired
@@ -52,8 +51,7 @@ const defaultProps = {
     title: "",
     categoryTitles: [],
     showPercentageValue: false,
-    logScale: false,
-    alphaOrder: false
+    logScale: false
 };
 
 /**
@@ -98,7 +96,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     data() /*: array<object> */ {
-        const {data, showPercentageValue, alphaOrder} = this.props;
+        const {data, showPercentageValue} = this.props;
 
         if (!showPercentageValue) {
             return data;
