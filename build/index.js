@@ -23,16 +23,12 @@ const propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
-        groupId: PropTypes.string.isRequired
+        color: PropTypes.string.isRequired
     }).isRequired).isRequired,
     categoryTitles: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
         categoryTitle: PropTypes.string.isRequired
     })),
-    groups: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        color: PropTypes.string.isRequired
-    }).isRequired).isRequired,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
     selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
@@ -40,6 +36,7 @@ const propTypes = {
 
 const defaultProps = {
     title: "",
+    colors: [],
     categoryTitles: [],
     showPercentageValue: false,
     logScale: false
@@ -59,14 +56,23 @@ class GroupedBarChartHorizontal extends Component {
         this.onTitleClicked = this.onTitleClicked.bind(this);
     }
 
+    colors() {
+        const { data } = this.props;
+        return _.uniq(data.map(d => d.color));
+    }
+
+    numOfGroups() {
+        return this.colors().length;
+    }
+
     groupTotals() /*: object */{
         const { data } = this.props;
 
-        const groupedData /*: object */ = _.groupBy(data, d => d.groupId);
+        const groupedData /*: object */ = _.groupBy(data, d => d.color);
 
-        return Object.keys(groupedData).reduce((memo, groupId) => {
-            const groupData /*: array<object> */ = groupedData[groupId];
-            memo[groupId] = groupData.reduce((memo, gd) => memo + gd.value, 0);
+        return Object.keys(groupedData).reduce((memo, color) => {
+            const groupData /*: array<object> */ = groupedData[color];
+            memo[color] = groupData.reduce((memo, gd) => memo + gd.value, 0);
             return memo;
         }, {});
     }
@@ -80,7 +86,7 @@ class GroupedBarChartHorizontal extends Component {
             const groupTotals = this.groupTotals();
 
             return data.map(d => {
-                const total = groupTotals[d.groupId];
+                const total = groupTotals[d.color];
                 return Object.assign({ percentageValue: calculatePercentage(d.value, total) }, d);
             });
         }
@@ -96,17 +102,17 @@ class GroupedBarChartHorizontal extends Component {
         return _.uniq(data.map(d => d.category));
     }
 
-    categoriesSize() /*: number */{
+    numOfCategories() /*: number */{
         return this.categories().length;
     }
 
     svgHeight() /*: number */{
-        const { groups } = this.props,
-              categoriesSize = this.categoriesSize(),
-              groupSize = groups.length,
-              barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(groupSize));
+        const { colors } = this.props,
+              numOfCategories = this.numOfCategories(),
+              numOfGroups = this.numOfGroups(),
+              barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
 
-        return categoriesSize * barHeight * groupSize;
+        return numOfCategories * barHeight * numOfGroups;
     }
 
     divHeight() /*: number */{
@@ -116,14 +122,9 @@ class GroupedBarChartHorizontal extends Component {
         return svgMargin.top + svgHeight + svgMargin.bottom;
     }
 
-    barColorIfSelected(datum /*: object */) /*: string */{
-        const { groups } = this.props;
-        return groups.find(g => g.id === datum.groupId).color;
-    }
-
     barColor(datum /*: object */) /*: string */{
         const { selection } = this.props;
-        return selection.includes(datum.category) ? this.barColorIfSelected(datum) : "gray";
+        return selection.includes(datum.category) ? datum.color : "gray";
     }
 
     categoryTitle(category /*: string */) /*: string */{
@@ -183,7 +184,7 @@ class GroupedBarChartHorizontal extends Component {
 
     y1Domain() /*: array<string> */{
         const data = this.data();
-        return _.uniq(data.map(d => this.barColorIfSelected(d)));
+        return _.uniq(data.map(d => d.color));
     }
 
     y1Scale() /*: function */{
@@ -233,7 +234,7 @@ class GroupedBarChartHorizontal extends Component {
                                     { key: autoIncrement,
                                         className: "bar",
                                         x: "0",
-                                        y: y0Scale(d.category) + y1Scale(this.barColorIfSelected(d)),
+                                        y: y0Scale(d.category) + y1Scale(d.color),
                                         width: xScale(showPercentageValue ? d.percentageValue : d.value),
                                         height: y1Scale.bandwidth(),
                                         style: { fill: this.barColor(d) },

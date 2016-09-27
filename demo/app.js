@@ -16,19 +16,19 @@ const props = {
     "data": [{
         "category": "hazelnut",
         "value": 1000,
-        "groupId": "62"
+        "color": "red"
     }, {
         "category": "peanut",
         "value": 1000,
-        "groupId": "62"
+        "color": "red"
     },{
         "category": "hazelnut",
         "value": 1000,
-        "groupId": "63"
+        "color": "green"
     }, {
         "category": "peanut",
         "value": 2000,
-        "groupId": "63"
+        "color": "green"
     }],
     "categoryTitles": [
         {
@@ -38,16 +38,6 @@ const props = {
         {
             category: "peanut",
             categoryTitle: "ankara"
-        }
-    ],
-    "groups": [
-        {
-            "id": "62",
-            "color": "red"
-        },
-        {
-            "id": "63",
-            "color": "green"
         }
     ],
     "showPercentageValue": true,
