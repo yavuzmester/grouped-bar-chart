@@ -30,5 +30,5 @@
 		"test": "npm install && mocha"
 	},
 	"author": "Yavuz Mester",
-	"license": "MIT"
+	"license": "Apache-2.0"
 }
