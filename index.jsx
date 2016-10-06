@@ -293,9 +293,12 @@ class GroupedBarChartHorizontal extends Component {
         const {shiftKey /*: boolean */, category /*: string */} = e,
             {selection} = this.props;
 
-        const newSelection = shiftKey ? _.without(selection, category) : selection.concat([category]);
+        const selectionChanged = shiftKey ? selection.includes(category) : !selection.includes(category);
 
-        this.emit("bar-click", {newSelection: newSelection});
+        if (selectionChanged) {
+            const newSelection = shiftKey ? _.without(selection, category) : selection.concat([category]);
+            this.emit("bar-click", {newSelection: newSelection});
+        }
     }
 
     onTitleClicked() {
