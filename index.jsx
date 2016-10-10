@@ -9,6 +9,7 @@ const d3 = require("d3");
 const autoIncrement = require("autoincrement");
 const toPx = require("@yavuzmester/css-length-to-px");
 const _ = require("underscore");
+const shallowEqual = require("shallowequal");
 const calculatePercentage = (value, total) => Number((100 * value / total).toFixed(2));
 
 const propTypes = {
@@ -303,6 +304,10 @@ class GroupedBarChartHorizontal extends Component {
 
     onTitleClicked() {
         this.emit("title-click");
+    }
+
+    shouldComponentUpdate(nextProps /*: object */) {
+        return !shallowEqual(this.props, nextProps);
     }
 } //end of GroupedBarChartHorizontal component def
 
