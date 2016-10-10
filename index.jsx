@@ -306,7 +306,7 @@ class GroupedBarChartHorizontal extends Component {
         this.emit("title-click");
     }
 
-    shouldComponentUpdate(nextProps /*: object */) {
+    shouldComponentUpdate(nextProps /*: object */) /*: boolean */ {
         return !shallowEqual(this.props, nextProps);
     }
 } //end of GroupedBarChartHorizontal component def
