@@ -42,8 +42,7 @@ const props = {
     ],
     "showPercentageValue": true,
     "logScale": false,
-    "selection": ["hazelnut", "peanut"],
-    "visibility": true
+    "selection": ["hazelnut", "peanut"]
 };
 
 setTimeout(() => {

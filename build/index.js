@@ -32,8 +32,7 @@ const propTypes = {
     })),
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
-    selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-    visibility: PropTypes.bool
+    selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 };
 
 const defaultProps = {
@@ -41,8 +40,7 @@ const defaultProps = {
     colors: [],
     categoryTitles: [],
     showPercentageValue: false,
-    logScale: false,
-    visibility: false
+    logScale: false
 };
 
 /**
@@ -209,7 +207,7 @@ class GroupedBarChartHorizontal extends Component {
 
     render() {
         const data = this.data(),
-              { title, divWidth, svgMargin, showPercentageValue, visibility } = this.props,
+              { title, divWidth, svgMargin, showPercentageValue } = this.props,
               divHeight = this.divHeight(),
               svgHeight = this.svgHeight(),
               xScale = this.xScale(),
@@ -220,7 +218,7 @@ class GroupedBarChartHorizontal extends Component {
             /* Margin convention in D3: https://gist.github.com/mbostock/3019563 */
             React.createElement(
                 "div",
-                { className: "category-chart", style: { "visibility": visibility ? "visible" : "hidden" } },
+                { className: "category-chart" },
                 React.createElement(
                     "svg",
                     { width: divWidth, height: divHeight },

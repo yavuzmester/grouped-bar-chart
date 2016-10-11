@@ -38,8 +38,7 @@ const propTypes = {
     logScale: PropTypes.bool,
     selection: PropTypes.arrayOf(
         PropTypes.string.isRequired
-    ).isRequired,
-    visibility: PropTypes.bool
+    ).isRequired
 };
 
 const defaultProps = {
@@ -47,8 +46,7 @@ const defaultProps = {
     colors: [],
     categoryTitles: [],
     showPercentageValue: false,
-    logScale: false,
-    visibility: false
+    logScale: false
 };
 
 /**
@@ -219,7 +217,7 @@ class GroupedBarChartHorizontal extends Component {
 
     render() {
         const data = this.data(),
-            {title, divWidth, svgMargin, showPercentageValue, visibility} = this.props,
+            {title, divWidth, svgMargin, showPercentageValue} = this.props,
             divHeight = this.divHeight(),
             svgHeight = this.svgHeight(),
             xScale = this.xScale(),
@@ -228,7 +226,7 @@ class GroupedBarChartHorizontal extends Component {
 
         return (
             /* Margin convention in D3: https://gist.github.com/mbostock/3019563 */
-            <div className="category-chart" style={{"visibility": visibility ? "visible" : "hidden"}}>
+            <div className="category-chart">
                 <svg width={divWidth} height={divHeight}>
                     <g className="margin axis" transform={"translate(" + svgMargin.left + "," + svgMargin.top + ")"}>
                         <g className="x axis" transform={"translate(0," + svgHeight + ")"}/>
