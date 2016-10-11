@@ -307,7 +307,10 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     shouldComponentUpdate(nextProps /*: object */) /*: boolean */ {
-        return !shallowEqual(this.props, nextProps);
+        return !shallowEqual(
+            _.pick(this.props, Object.keys(propTypes)),
+            _.pick(nextProps, Object.keys(propTypes))
+        );
     }
 } //end of GroupedBarChartHorizontal component def
 
