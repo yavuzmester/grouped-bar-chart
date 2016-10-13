@@ -277,14 +277,14 @@ class GroupedBarChartHorizontal extends Component {
         xAxisNode.call(xAxis);
         yAxisNode.call(yAxis);
 
-        //make the y axis labels clickable
-        yAxisNode.selectAll(".tick").on("click", category => {
-            this.onBarClicked(Object.assign({category: category}, d3.event))
-        });
-
         //adjust the y axis label colors (Caution: avoid nested selections in d3, as it expects the data to be nested as well)
         yAxisNode.selectAll(".tick text").data(this.categories()).
             style("fill", category => this.categoryTitleColor(category)).html(category => this.categoryTitle(category) );
+
+        //make the y axis labels clickable
+        yAxisNode.selectAll(".tick text").on("click", category => {
+            this.onBarClicked(Object.assign({category: category, shiftKey: d3.event}))
+        });
     }
 
     onBarClicked(e /*: object */) {
