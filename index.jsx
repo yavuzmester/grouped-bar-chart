@@ -291,13 +291,14 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     onBarClicked(e /*: object */) {
-        const {shiftKey /*: boolean */, category /*: string */} = e,
-            {selection} = this.props;
+        const {category /*: string */, shiftKey /*: boolean */} = e,
+            {selection} = this.props,
+            categories = this.categories();
 
-        const selectionChanged = shiftKey ? selection.includes(category) : !selection.includes(category);
+        const newSelection = createNewSelection(selection, category, shiftKey, categories),
+            selectionChanged = newSelection.length != selection.length;
 
         if (selectionChanged) {
-            const newSelection = shiftKey ? _.without(selection, category) : selection.concat([category]);
             this.emit("bar-click", {newSelection: newSelection});
         }
     }
@@ -313,6 +314,26 @@ class GroupedBarChartHorizontal extends Component {
         );
     }
 } //end of GroupedBarChartHorizontal component def
+
+function createNewSelection(
+    selection /*: array<string */,
+    category /*: string */,
+    shiftKey /*: boolean */,
+    categories /*: array<string> */) /*: array<string */ {
+
+    if (!shiftKey && !selection.includes(category)) {
+        return selection.concat([category]);
+    }
+    else if (!shiftKey && selection.includes(category)) {
+        return selection.length === categories.length ? [category] : selection;
+    }
+    else if (shiftKey && selection.includes(category)) {
+        return selection.length === 1 ? categories : _.without(selection, category);
+    }
+    else if (shiftKey && !selection.includes(category)) {
+        return selection;
+    }
+}
 
 GroupedBarChartHorizontal.propTypes = propTypes;
 GroupedBarChartHorizontal.defaultProps = defaultProps;
