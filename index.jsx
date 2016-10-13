@@ -85,19 +85,14 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     data() /*: array<object> */ {
-        const {data, showPercentageValue} = this.props;
+        const {data} = this.props;
 
-        if (!showPercentageValue) {
-            return data;
-        }
-        else {
-            const groupTotals = this.groupTotals();
+        const groupTotals = this.groupTotals();
 
-            return data.map(d => {
-                const total = groupTotals[d.color];
-                return Object.assign({percentageValue: calculatePercentage(d.value, total)}, d);
-            });
-        }
+        return data.map(d => {
+            const total = groupTotals[d.color];
+            return Object.assign({percentageValue: calculatePercentage(d.value, total)}, d);
+        });
     }
 
     svgWidth() /*: number */ {
