@@ -235,7 +235,7 @@ class GroupedBarChartHorizontal extends Component {
                                     React.createElement(
                                         "title",
                                         null,
-                                        d.value + "n%" + d.percentageValue + d.count ? "\ncount:" + d.count : ""
+                                        d.value + "\n%" + d.percentageValue + (d.count ? "\ncount:" + d.count : "")
                                     )
                                 );
                             })
