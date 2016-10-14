@@ -285,7 +285,7 @@ class GroupedBarChartHorizontal extends Component {
 
         //make the y axis labels clickable
         yAxisNode.selectAll(".tick text").on("click", category => {
-            this.onBarClicked(Object.assign({ category: category, shiftKey: d3.event }));
+            this.onBarClicked(Object.assign({ category: category, shiftKey: d3.event.shiftKey }));
         });
     }
 
