@@ -30,7 +30,7 @@ const props = {
         "value": 2000,
         "color": "green"
     }],
-    "categoryTitles": [
+    "allCategories": [
         {
             category: "hazelnut",
             categoryTitle: "adana"

@@ -26,10 +26,10 @@ const propTypes = {
         value: PropTypes.number.isRequired,
         color: PropTypes.string.isRequired
     }).isRequired).isRequired,
-    categoryTitles: PropTypes.arrayOf(PropTypes.shape({
+    allCategories: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
-        categoryTitle: PropTypes.string.isRequired
-    })),
+        categoryTitle: PropTypes.string
+    }).isRequired).isRequired,
     showPercentageValue: PropTypes.bool,
     logScale: PropTypes.bool,
     selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
@@ -38,7 +38,6 @@ const propTypes = {
 const defaultProps = {
     title: "",
     colors: [],
-    categoryTitles: [],
     showPercentageValue: false,
     logScale: false
 };
@@ -94,22 +93,18 @@ class GroupedBarChartHorizontal extends Component {
         return divWidth - svgMargin.left - svgMargin.right;
     }
 
-    categories() /*: array<string> */{
+    categoriesToDisplay() /*: array<string> */{
         const data = this.data();
         return _.uniq(data.map(d => d.category));
     }
 
-    numOfCategories() /*: number */{
-        return this.categories().length;
-    }
-
     svgHeight() /*: number */{
         const { colors } = this.props,
-              numOfCategories = this.numOfCategories(),
+              numOfCategoriesToDisplay = this.categoriesToDisplay().length,
               numOfGroups = this.numOfGroups(),
               barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
 
-        return numOfCategories * barHeight * numOfGroups;
+        return numOfCategoriesToDisplay * barHeight * numOfGroups;
     }
 
     divHeight() /*: number */{
@@ -125,10 +120,10 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     categoryTitle(category /*: string */) /*: string */{
-        const { categoryTitles } = this.props,
-              categoryTitleObj = categoryTitles && categoryTitles.find(ct => ct.category === category);
+        const { allCategories } = this.props,
+              categoryObj = allCategories.find(ct => ct.category === category);
 
-        return categoryTitleObj ? categoryTitleObj.categoryTitle : category;
+        return categoryObj ? categoryObj.categoryTitle : category;
     }
 
     categoryTitleColor(category /*: string */) /*: string */{
@@ -286,7 +281,7 @@ class GroupedBarChartHorizontal extends Component {
         yAxisNode.call(yAxis);
 
         //adjust the y axis label colors (Caution: avoid nested selections in d3, as it expects the data to be nested as well)
-        yAxisNode.selectAll(".tick text").data(this.categories()).style("fill", category => this.categoryTitleColor(category)).html(category => this.categoryTitle(category));
+        yAxisNode.selectAll(".tick text").data(this.categoriesToDisplay()).style("fill", category => this.categoryTitleColor(category)).html(category => this.categoryTitle(category));
 
         //make the y axis labels clickable
         yAxisNode.selectAll(".tick text").on("click", category => {
@@ -296,10 +291,9 @@ class GroupedBarChartHorizontal extends Component {
 
     onBarClicked(e /*: object */) {
         const { category /*: string */, shiftKey /*: boolean */ } = e,
-              { selection } = this.props,
-              categories = this.categories();
+              { selection, allCategories } = this.props;
 
-        const newSelection = createNewSelection(selection, category, shiftKey, categories),
+        const newSelection = createNewSelection(selection, category, shiftKey, allCategories),
               selectionChanged = newSelection.length != selection.length;
 
         if (selectionChanged) {
@@ -319,14 +313,14 @@ class GroupedBarChartHorizontal extends Component {
 function createNewSelection(selection /*: array<string */
 , category /*: string */
 , shiftKey /*: boolean */
-, categories /*: array<string> */) /*: array<string */{
+, allCategories /*: array<object> */) /*: array<string */{
 
     if (!shiftKey && !selection.includes(category)) {
         return selection.concat([category]);
     } else if (!shiftKey && selection.includes(category)) {
-        return selection.length === categories.length ? [category] : selection;
+        return selection.length === allCategories.length ? [category] : selection;
     } else if (shiftKey && selection.includes(category)) {
-        return selection.length === 1 ? categories : _.without(selection, category);
+        return selection.length === 1 ? allCategories : _.without(selection, category);
     } else if (shiftKey && !selection.includes(category)) {
         return selection;
     }
