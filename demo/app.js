@@ -29,22 +29,26 @@ const props = {
     ],
     "data": [{
         "category": "hazelnut",
+        "color": "red",
         "value": 1000,
-        "color": "red"
+        "percentageValue": 50
     }, {
         "category": "peanut",
+        "color": "red",
         "value": 1000,
-        "color": "red"
+        "percentageValue": 50
     },{
         "category": "hazelnut",
+        "color": "green",
         "value": 1000,
-        "color": "green"
+        "percentageValue": 33.33
     }, {
         "category": "peanut",
+        "color": "green",
         "value": 2000,
-        "color": "green"
+        "percentageValue": 66.67
     }],
-    "showPercentageValue": true,
+    "datumPropForBar": "value",
     "logScale": false
 };
 

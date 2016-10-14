@@ -10,7 +10,6 @@ const autoIncrement = require("autoincrement");
 const toPx = require("@yavuzmester/css-length-to-px");
 const _ = require("underscore");
 const shallowEqual = require("shallowequal");
-const calculatePercentage = (value, total) => Number((100 * value / total).toFixed(2));
 
 const propTypes = {
     title: PropTypes.string,
@@ -28,18 +27,18 @@ const propTypes = {
     selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
+        color: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
-        count: PropTypes.number, //in case value is not the count, can be provided to show up in the bar popup
-        color: PropTypes.string.isRequired
+        percentageValue: PropTypes.number.isRequired,
+        count: PropTypes.number //can be provided for bar popup for now.
     }).isRequired).isRequired,
-    showPercentageValue: PropTypes.bool,
+    datumPropForBar: PropTypes.oneOf(["value", "percentageValue"]),
     logScale: PropTypes.bool
 };
 
 const defaultProps = {
     title: "",
-    colors: [],
-    showPercentageValue: false,
+    datumPropForBar: "value",
     logScale: false
 };
 
@@ -57,36 +56,22 @@ class GroupedBarChartHorizontal extends Component {
         this.onTitleClicked = this.onTitleClicked.bind(this);
     }
 
-    colors() {
+    colorsToDisplay() /*: array<string> */{
         const { data } = this.props;
         return _.uniq(data.map(d => d.color));
     }
 
-    numOfGroups() {
-        return this.colors().length;
+    numOfGroups() /*: number */{
+        return this.colorsToDisplay().length;
     }
 
-    groupTotals() /*: object */{
+    categoriesToDisplay() /*: array<string> */{
         const { data } = this.props;
-
-        const groupedData /*: object */ = _.groupBy(data, d => d.color);
-
-        return Object.keys(groupedData).reduce((memo, color) => {
-            const groupData /*: array<object> */ = groupedData[color];
-            memo[color] = groupData.reduce((memo, gd) => memo + gd.value, 0);
-            return memo;
-        }, {});
+        return _.uniq(data.map(d => d.category));
     }
 
-    data() /*: array<object> */{
-        const { data } = this.props;
-
-        const groupTotals = this.groupTotals();
-
-        return data.map(d => {
-            const total = groupTotals[d.color];
-            return Object.assign({ percentageValue: calculatePercentage(d.value, total) }, d);
-        });
+    numOfCategoriesToDisplay() /*: number */{
+        return this.categoriesToDisplay().length;
     }
 
     svgWidth() /*: number */{
@@ -94,17 +79,17 @@ class GroupedBarChartHorizontal extends Component {
         return divWidth - svgMargin.left - svgMargin.right;
     }
 
-    categoriesToDisplay() /*: array<string> */{
-        const data = this.data();
-        return _.uniq(data.map(d => d.category));
+    barHeight() /*: number */{
+        const numOfGroups = this.numOfGroups();
+        return toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
     }
 
     svgHeight() /*: number */{
-        const numOfCategoriesToDisplay = this.categoriesToDisplay().length,
+        const numOfCategoriesToDisplay = this.numOfCategoriesToDisplay(),
               numOfGroups = this.numOfGroups(),
-              barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
+              barHeight = this.barHeight();
 
-        return numOfCategoriesToDisplay * barHeight * numOfGroups;
+        return numOfCategoriesToDisplay * numOfGroups * barHeight;
     }
 
     divHeight() /*: number */{
@@ -119,23 +104,21 @@ class GroupedBarChartHorizontal extends Component {
         return selection.includes(datum.category) ? datum.color : "gray";
     }
 
-    categoryTitle(category /*: string */) /*: string */{
+    titleForCategory(category /*: string */) /*: string */{
         const { categories } = this.props,
               categoryObj = categories.find(c => c.category === category);
 
         return categoryObj ? categoryObj.title || category : category;
     }
 
-    categoryTitleColor(category /*: string */) /*: string */{
+    colorForCategoryTitle(category /*: string */) /*: string */{
         const { selection } = this.props;
         return selection.includes(category) ? "white" : "gray";
     }
 
     xDomain() /*: array<number> */{
-        const data = this.data(),
-              { showPercentageValue, logScale } = this.props;
-
-        return [!logScale ? 0 : 1, d3.max(data, d => showPercentageValue ? d.percentageValue : d.value)];
+        const { data, datumPropForBar, logScale } = this.props;
+        return [!logScale ? 0 : 1, d3.max(data, d => d[datumPropForBar])];
     }
 
     xRange() /*: array<number> */{
@@ -156,14 +139,14 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     xAxis() /*: function */{
-        const { showPercentageValue } = this.props,
+        const { datumPropForBar } = this.props,
               xScale = this.xScale();
 
-        return !showPercentageValue ? d3.axisBottom(xScale).ticks(3, ",.0s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
+        return datumPropForBar !== "percentageValue" ? d3.axisBottom(xScale).ticks(3, ",.0s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
     }
 
     y0Domain() /*: array<string> */{
-        const data = this.data();
+        const { data } = this.props;
         return data.map(d => d.category);
     }
 
@@ -175,7 +158,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     y1Domain() /*: array<string> */{
-        const data = this.data();
+        const { data } = this.props;
         return _.uniq(data.map(d => d.color));
     }
 
@@ -196,9 +179,12 @@ class GroupedBarChartHorizontal extends Component {
         return d3.axisLeft(y0Scale);
     }
 
+    barPopupText(datum /*: object */) /*: string */{
+        return datum.value + "\n%" + datum.percentageValue + (datum.count ? "\ncount: " + datum.count : "");
+    }
+
     render() {
-        const data = this.data(),
-              { title, divWidth, svgMargin, showPercentageValue } = this.props,
+        const { title, divWidth, svgMargin, data, datumPropForBar } = this.props,
               divHeight = this.divHeight(),
               svgHeight = this.svgHeight(),
               xScale = this.xScale(),
@@ -227,14 +213,14 @@ class GroupedBarChartHorizontal extends Component {
                                         className: "bar",
                                         x: "0",
                                         y: y0Scale(d.category) + y1Scale(d.color),
-                                        width: xScale(showPercentageValue ? d.percentageValue : d.value),
+                                        width: xScale(d[datumPropForBar]),
                                         height: y1Scale.bandwidth(),
                                         style: { fill: this.barColor(d) },
                                         onClick: e => this.onBarClicked(Object.assign({ category: d.category }, e)) },
                                     React.createElement(
                                         "title",
                                         null,
-                                        d.value + "\n%" + d.percentageValue + (d.count ? "\ncount: " + d.count : "")
+                                        this.barPopupText(d)
                                     )
                                 );
                             })
@@ -268,7 +254,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     componentDidMountOrUpdate() {
-        const data = this.data(),
+        const { data } = this.props,
               xAxis = this.xAxis(),
               yAxis = this.yAxis();
 
@@ -281,11 +267,16 @@ class GroupedBarChartHorizontal extends Component {
         yAxisNode.call(yAxis);
 
         //adjust the y axis label colors (Caution: avoid nested selections in d3, as it expects the data to be nested as well)
-        yAxisNode.selectAll(".tick text").data(this.categoriesToDisplay()).style("fill", category => this.categoryTitleColor(category)).html(category => this.categoryTitle(category));
+        yAxisNode.selectAll(".tick text").data(this.categoriesToDisplay()).style("fill", category => this.colorForCategoryTitle(category)).html(category => this.titleForCategory(category));
 
         //make the y axis labels clickable
         yAxisNode.selectAll(".tick text").on("click", category => {
-            this.onBarClicked(Object.assign({ category: category, shiftKey: d3.event.shiftKey }));
+            const e = {
+                category: category,
+                shiftKey: d3.event.shiftKey
+            };
+
+            this.onBarClicked(e);
         });
     }
 
