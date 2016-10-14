@@ -13,6 +13,20 @@ const props = {
         "top": 20,
         "bottom": 30
     },
+    "categories": [
+        {
+            category: "hazelnut",
+            title: "adana"
+        },
+        {
+            category: "peanut",
+            title: "ankara"
+        }
+    ],
+    "selection": [
+        "hazelnut",
+        "peanut"
+    ],
     "data": [{
         "category": "hazelnut",
         "value": 1000,
@@ -30,19 +44,8 @@ const props = {
         "value": 2000,
         "color": "green"
     }],
-    "allCategories": [
-        {
-            category: "hazelnut",
-            categoryTitle: "adana"
-        },
-        {
-            category: "peanut",
-            categoryTitle: "ankara"
-        }
-    ],
     "showPercentageValue": true,
-    "logScale": false,
-    "selection": ["hazelnut", "peanut"]
+    "logScale": false
 };
 
 setTimeout(() => {

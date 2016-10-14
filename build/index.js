@@ -21,19 +21,19 @@ const propTypes = {
         top: PropTypes.number.isRequired,
         bottom: PropTypes.number.isRequired
     }).isRequired,
+    categories: PropTypes.arrayOf(PropTypes.shape({
+        category: PropTypes.string.isRequired,
+        title: PropTypes.string
+    }).isRequired).isRequired,
+    selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
         count: PropTypes.number, //in case value is not the count, can be provided to show up in the bar popup
         color: PropTypes.string.isRequired
     }).isRequired).isRequired,
-    allCategories: PropTypes.arrayOf(PropTypes.shape({
-        category: PropTypes.string.isRequired,
-        categoryTitle: PropTypes.string
-    }).isRequired).isRequired,
     showPercentageValue: PropTypes.bool,
-    logScale: PropTypes.bool,
-    selection: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    logScale: PropTypes.bool
 };
 
 const defaultProps = {
@@ -100,8 +100,7 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     svgHeight() /*: number */{
-        const { colors } = this.props,
-              numOfCategoriesToDisplay = this.categoriesToDisplay().length,
+        const numOfCategoriesToDisplay = this.categoriesToDisplay().length,
               numOfGroups = this.numOfGroups(),
               barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
 
@@ -121,10 +120,10 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     categoryTitle(category /*: string */) /*: string */{
-        const { allCategories } = this.props,
-              categoryObj = allCategories.find(ct => ct.category === category);
+        const { categories } = this.props,
+              categoryObj = categories.find(c => c.category === category);
 
-        return categoryObj ? categoryObj.categoryTitle : category;
+        return categoryObj ? categoryObj.title || category : category;
     }
 
     categoryTitleColor(category /*: string */) /*: string */{
@@ -291,14 +290,27 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     onBarClicked(e /*: object */) {
-        const { category /*: string */, shiftKey /*: boolean */ } = e,
-              { selection, allCategories } = this.props;
-
-        const newSelection = createNewSelection(selection, category, shiftKey, allCategories),
+        const { selection } = this.props,
+              newSelection = this._createNewSelection(e),
               selectionChanged = newSelection.length != selection.length;
 
         if (selectionChanged) {
             this.emit("bar-click", { newSelection: newSelection });
+        }
+    }
+
+    _createNewSelection(e /*: object */) /*: array<string */{
+        const { category /*: string */, shiftKey /*: boolean */ } = e,
+              { selection, categories } = this.props;
+
+        if (!shiftKey && !selection.includes(category)) {
+            return selection.concat([category]);
+        } else if (!shiftKey && selection.includes(category)) {
+            return selection.length === categories.length ? [category] : selection;
+        } else if (shiftKey && selection.includes(category)) {
+            return selection.length === 1 ? categories.map(c => c.category) : _.without(selection, category);
+        } else if (shiftKey && !selection.includes(category)) {
+            return selection;
         }
     }
 
@@ -310,22 +322,6 @@ class GroupedBarChartHorizontal extends Component {
         return !shallowEqual(_.pick(this.props, Object.keys(propTypes)), _.pick(nextProps, Object.keys(propTypes)));
     }
 } //end of GroupedBarChartHorizontal component def
-
-function createNewSelection(selection /*: array<string */
-, category /*: string */
-, shiftKey /*: boolean */
-, allCategories /*: array<object> */) /*: array<string */{
-
-    if (!shiftKey && !selection.includes(category)) {
-        return selection.concat([category]);
-    } else if (!shiftKey && selection.includes(category)) {
-        return selection.length === allCategories.length ? [category] : selection;
-    } else if (shiftKey && selection.includes(category)) {
-        return selection.length === 1 ? allCategories.map(c => c.category) : _.without(selection, category);
-    } else if (shiftKey && !selection.includes(category)) {
-        return selection;
-    }
-}
 
 GroupedBarChartHorizontal.propTypes = propTypes;
 GroupedBarChartHorizontal.defaultProps = defaultProps;
