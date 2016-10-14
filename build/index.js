@@ -24,6 +24,7 @@ const propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
+        count: PropTypes.number, //in case value is not the count, can be provided to show up in the bar popup
         color: PropTypes.string.isRequired
     }).isRequired).isRequired,
     allCategories: PropTypes.arrayOf(PropTypes.shape({
@@ -234,7 +235,7 @@ class GroupedBarChartHorizontal extends Component {
                                     React.createElement(
                                         "title",
                                         null,
-                                        d.value + "\n%" + d.percentageValue
+                                        d.value + "n%" + d.percentageValue + d.count ? "\ncount:" + d.count : ""
                                     )
                                 );
                             })

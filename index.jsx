@@ -25,6 +25,7 @@ const propTypes = {
         PropTypes.shape({
             category: PropTypes.string.isRequired,
             value: PropTypes.number.isRequired,
+            count: PropTypes.number,   //in case value is not the count, can be provided to show up in the bar popup
             color: PropTypes.string.isRequired
         }).isRequired
     ).isRequired,
@@ -234,7 +235,13 @@ class GroupedBarChartHorizontal extends Component {
                                             style={{fill: this.barColor(d)}}
                                             onClick={e => this.onBarClicked(Object.assign({category: d.category}, e))}>
 
-                                            <title>{d.value + "\n%" + d.percentageValue}</title>
+                                            <title>{
+                                                d.value +
+                                                "n%" + d.percentageValue +
+                                                d.count ?
+                                                    "\ncount:" + d.count :
+                                                    ""
+                                            }</title>
                                         </rect>
                                     );
                                 })
