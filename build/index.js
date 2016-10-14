@@ -320,7 +320,7 @@ function createNewSelection(selection /*: array<string */
     } else if (!shiftKey && selection.includes(category)) {
         return selection.length === allCategories.length ? [category] : selection;
     } else if (shiftKey && selection.includes(category)) {
-        return selection.length === 1 ? allCategories : _.without(selection, category);
+        return selection.length === 1 ? allCategories.map(c => c.category) : _.without(selection, category);
     } else if (shiftKey && !selection.includes(category)) {
         return selection;
     }
