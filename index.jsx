@@ -239,7 +239,7 @@ class GroupedBarChartHorizontal extends Component {
                                                 d.value +
                                                 "\n%" + d.percentageValue +
                                                 (d.count ?
-                                                    "\ncount:" + d.count :
+                                                    "\ncount: " + d.count :
                                                     "")
                                             }</title>
                                         </rect>
