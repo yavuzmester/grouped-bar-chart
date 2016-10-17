@@ -105,10 +105,8 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     titleForCategory(category /*: string */) /*: string */{
-        const { categories } = this.props,
-              categoryObj = categories.find(c => c.category === category);
-
-        return categoryObj ? categoryObj.title || category : category;
+        const { categories } = this.props;
+        return categories.find(c => c.category === category).title || category;
     }
 
     colorForCategoryTitle(category /*: string */) /*: string */{
