@@ -28,8 +28,8 @@ const propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         category: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired,
-        value: PropTypes.number.isRequired,
-        percentageValue: PropTypes.number.isRequired,
+        value: PropTypes.number,
+        percentageValue: PropTypes.number,
         count: PropTypes.number //can be provided for bar popup for now.
     }).isRequired).isRequired,
     datumPropForBar: PropTypes.oneOf(["value", "percentageValue"]),
@@ -178,7 +178,25 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     barPopupText(datum /*: object */) /*: string */{
-        return datum.value + "\n%" + datum.percentageValue + (datum.count ? "\ncount: " + datum.count : "");
+        var popupText = "";
+
+        if (datum.value) {
+            popupText += datum.value + "\n";
+        }
+
+        if (datum.percentageValue) {
+            popupText += "%" + datum.percentageValue + "\n";
+        }
+
+        if (datum.count) {
+            popupText = "count: " + datum.count;
+        }
+
+        if (popupText.length > 0) {
+            popupText = popupText.substr(0, popupText.length - 1); //removes last \n
+        }
+
+        return popupText;
     }
 
     render() {
