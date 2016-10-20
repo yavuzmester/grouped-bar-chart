@@ -189,7 +189,7 @@ class GroupedBarChartHorizontal extends Component {
         }
 
         if (datum.count) {
-            popupText += "count: " + datum.count;
+            popupText += "count: " + datum.count + "\n";
         }
 
         if (popupText.length > 0) {
