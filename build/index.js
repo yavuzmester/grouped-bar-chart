@@ -182,7 +182,7 @@ class GroupedBarChartHorizontal extends Component {
         var popupText = "";
 
         if (datum.value) {
-            popupText += datum.value + "\n";
+            popupText += format(datum.value) + "\n";
         }
 
         if (datum.percentageValue) {
