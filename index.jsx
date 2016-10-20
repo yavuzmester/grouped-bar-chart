@@ -6,8 +6,9 @@ const React = require("react"),
     PropTypes = React.PropTypes;
 const ReactDOM = require("react-dom");
 const d3 = require("d3");
-const autoIncrement = require("autoincrement");
+const format = require("format-number")();
 const toPx = require("@yavuzmester/css-length-to-px");
+const autoIncrement = require("autoincrement");
 const _ = require("underscore");
 const shallowEqual = require("shallowequal");
 
@@ -201,7 +202,7 @@ class GroupedBarChartHorizontal extends Component {
         }
 
         if (datum.count) {
-            popupText += "count: " + datum.count + "\n";
+            popupText += "count: " + format(datum.count) + "\n";
         }
 
         if (popupText.length > 0) {
