@@ -3,7 +3,8 @@
 	"version": "2.0.42",
 	"main": "build/index.js",
 	"files": ["build/index.js"],
-	"description": "grouped bar chart powered with react and d3",
+	"description": "grouped bar chart with horizontal bars powered with react and d3",
+	"keywords": ["grouped", "bar", "chart", "horizontal", "d3", "react", "component"],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/yavuzmester/grouped-bar-chart-horizontal"
