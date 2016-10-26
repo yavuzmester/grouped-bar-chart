@@ -141,7 +141,7 @@ class GroupedBarChartHorizontal extends Component {
         const { datumPropForBar } = this.props,
               xScale = this.xScale();
 
-        return datumPropForBar !== "percentageValue" ? d3.axisBottom(xScale).ticks(3, ",.0s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
+        return datumPropForBar !== "percentageValue" ? d3.axisBottom(xScale).ticks(3, ",.1s") : d3.axisBottom(xScale).ticks(3).tickFormat(t => t + "%");
     }
 
     y0Domain() /*: array<string> */{
