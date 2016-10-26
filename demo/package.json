@@ -1,12 +1,13 @@
 {
     "name": "demo",
     "version": "1.0.0",
+    "private": true,
     "dependencies": {
+        "browserify": "^13.0.0",
+        "d3": "^4.2.2",
         "react": "^15.0.2",
         "react-dom": "^15.0.2",
-        "d3": "^4.2.2",
-        "@yavuzmester/grouped-bar-chart-horizontal": "file:..",
-        "browserify": "^13.0.0"
+        "@yavuzmester/grouped-bar-chart-horizontal": "file:.."
     },
     "scripts": {
         "rebuild": "rm -rf build && mkdir build && browserify app.js -o build/bundle.js"
