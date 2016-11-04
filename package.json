@@ -1,6 +1,6 @@
 {
 	"name": "@yavuzmester/grouped-bar-chart-horizontal",
-	"version": "2.0.44",
+	"version": "2.0.45",
 	"main": "build/index.js",
 	"files": ["build/index.js"],
 	"description": "grouped bar chart with horizontal bars powered with react and d3",
@@ -22,7 +22,9 @@
 		"@yavuzmester/css-length-to-px": "1.0.4"
 	},
 	"browserify-shim": {
-		"d3": "global:d3"
+		"d3": "global:d3",
+		"react": "global:React",
+		"react-dom": "global:ReactDOM"
 	},
 	"browserify": {
 		"transform": ["browserify-shim"]
