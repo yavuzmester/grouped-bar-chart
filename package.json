@@ -1,6 +1,6 @@
 {
 	"name": "@yavuzmester/grouped-bar-chart-horizontal",
-	"version": "2.0.43",
+	"version": "2.0.44",
 	"main": "build/index.js",
 	"files": ["build/index.js"],
 	"description": "grouped bar chart with horizontal bars powered with react and d3",
@@ -10,16 +10,16 @@
 		"url": "https://github.com/yavuzmester/grouped-bar-chart-horizontal"
 	},
 	"dependencies": {
-		"autoincrement": "^1.0.0",
-		"classnames": "^2.2.3",
+		"autoincrement": "1.0.0",
+		"classnames": "2.2.3",
 		"d3": "^4.2.2",
-		"event-emitter-mixin": "^0.3.5",
+		"event-emitter-mixin": "0.3.5",
 		"format-number": "2.0.1",
 		"react": "^15.0.2",
 		"react-dom": "^15.0.2",
 		"shallowequal": "0.2.2",
-		"underscore": "^1.8.3",
-		"@yavuzmester/css-length-to-px": "^1.0.4"
+		"underscore": "1.8.3",
+		"@yavuzmester/css-length-to-px": "1.0.4"
 	},
 	"browserify-shim": {
 		"d3": "global:d3"
