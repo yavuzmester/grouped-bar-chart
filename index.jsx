@@ -89,17 +89,12 @@ class GroupedBarChartHorizontal extends Component {
         return divWidth - svgMargin.left - svgMargin.right;
     }
 
-    barHeight() /*: number */ {
-        const numOfGroups = this.numOfGroups();
-        return toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
-    }
-
     svgHeight() /*: number */ {
         const numOfCategoriesToDisplay = this.numOfCategoriesToDisplay(),
             numOfGroups = this.numOfGroups(),
-            barHeight = this.barHeight();
+            barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
 
-        return numOfCategoriesToDisplay * numOfGroups * barHeight;
+        return Math.round(numOfCategoriesToDisplay * numOfGroups * barHeight);
     }
 
     divHeight() /*: number */ {
