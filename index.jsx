@@ -186,25 +186,31 @@ class GroupedBarChartHorizontal extends Component {
     }
 
     barPopupText(datum /*: object */) /*: string */ {
-        var popupText = "";
+        const popupTextLines = [];
 
         if (datum.value) {
-            popupText += format(datum.value) + "\n";
+            popupTextLines.push(format(datum.value));
         }
 
         if (datum.percentageValue) {
-            popupText += "%" + datum.percentageValue + "\n"
+            popupTextLines.push("%" + datum.percentageValue);
         }
 
         if (datum.count) {
-            popupText += "count: " + format(datum.count) + "\n";
+            popupTextLines.push("count: " + format(datum.count));
         }
 
-        if (popupText.length > 0) {
-            popupText = popupText.substr(0, popupText.length - 1);  //removes last \n
-        }
+        return popupTextLines.join("\n");
+    }
 
-        return popupText;
+    labelPopupText(data /*: object */, category /*: string */) {
+        const dataForCategory = data.filter(d => d.category === category);
+
+        const divider = "\n-----------\n";
+
+        const popupTextLines = dataForCategory.map(d => this.barPopupText(d));
+
+        return popupTextLines.join(divider);
     }
 
     render() {
@@ -287,6 +293,11 @@ class GroupedBarChartHorizontal extends Component {
             };
 
             this.onBarClicked(e);
+        });
+
+        //adjust tooltip for the y axis labels
+        yAxisNode.selectAll(".tick text").append("title").text(category => {
+            return this.labelPopupText(data, category);
         });
     }
 
