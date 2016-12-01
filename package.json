@@ -1,6 +1,6 @@
 {
 	"name": "@yavuzmester/grouped-bar-chart-horizontal",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"main": "build/index.js",
 	"files": ["build/index.js"],
 	"description": "grouped bar chart with horizontal bars powered with react and d3",
