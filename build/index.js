@@ -181,7 +181,7 @@ class GroupedBarChartHorizontal extends Component {
         }
 
         if (datum.percentageValue != undefined) {
-            popupTextLines.push("%" + datum.percentageValue);
+            popupTextLines.push("~" + datum.percentageValue + "%");
         }
 
         if (datum.count) {
