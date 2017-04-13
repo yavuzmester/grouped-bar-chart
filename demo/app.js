@@ -1,6 +1,6 @@
 "use strict";
 
-const GroupedBarChartHorizontal = require("@yavuzmester/grouped-bar-chart-horizontal");
+const GroupedBarChartHorizontal = require("@ttlabs/grouped-bar-chart-horizontal");
 const React = require("react");
 const ReactDOM = require("react-dom");
 

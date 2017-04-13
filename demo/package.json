@@ -6,7 +6,7 @@
         "d3": "^4.2.2",
         "react": "^15.0.2",
         "react-dom": "^15.0.2",
-        "@yavuzmester/grouped-bar-chart-horizontal": "file:.."
+        "@ttlabs/grouped-bar-chart-horizontal": "file:.."
     },
     "devDependencies": {
         "browserify": "^13.0.0"

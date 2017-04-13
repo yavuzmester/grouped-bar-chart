@@ -7,7 +7,7 @@ const React = require("react"),
 const ReactDOM = require("react-dom");
 const d3 = require("d3");
 const format = require("format-number")();
-const toPx = require("@yavuzmester/css-length-to-px");
+const toPx = require("@ttlabs/css-length-to-px");
 const autoIncrement = require("autoincrement");
 const _ = require("underscore");
 const shallowEqual = require("shallowequal");
@@ -92,7 +92,7 @@ class GroupedBarChartHorizontal extends Component {
     svgHeight() /*: number */ {
         const numOfCategoriesToDisplay = this.numOfCategoriesToDisplay(),
             numOfGroups = this.numOfGroups(),
-            barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups));
+            barHeight = toPx(GroupedBarChartHorizontal.barHeightScale(numOfGroups), document.body);
 
         return Math.round(numOfCategoriesToDisplay * numOfGroups * barHeight);
     }

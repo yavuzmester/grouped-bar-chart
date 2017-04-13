@@ -1,5 +1,5 @@
 {
-	"name": "@yavuzmester/grouped-bar-chart-horizontal",
+	"name": "@ttlabs/grouped-bar-chart-horizontal",
 	"version": "2.1.2",
 	"main": "build/index.js",
 	"files": ["build/index.js"],
@@ -19,7 +19,7 @@
 		"react-dom": "^15.0.2",
 		"shallowequal": "0.2.2",
 		"underscore": "1.8.3",
-		"@yavuzmester/css-length-to-px": "1.0.5"
+		"@ttlabs/css-length-to-px": "1.0.6"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.14.0",
